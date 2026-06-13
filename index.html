@@ -3,19 +3,21 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Transcendence Radar</title>
+<title>Foresight Radar</title>
 <style>
   :root{
-    --bg:#f5f5f7;
-    --surface:#ffffff;
-    --surface-soft:#fbfbfd;
-    --ink:#1d1d1f;
-    --ink-soft:#6e6e73;
-    --ink-faint:#a1a1a6;
-    --line: rgba(0,0,0,0.07);
-    --line-soft: rgba(0,0,0,0.045);
-    --shadow: 0 1px 2px rgba(0,0,0,0.03), 0 12px 32px rgba(0,0,0,0.05);
-    --radius-lg: 22px;
+    --bg:#0a0d16;
+    --surface:#11151f;
+    --surface-soft:#161b27;
+    --surface-hover:#1c222f;
+    --ink:#eef1f6;
+    --ink-soft:#9aa4b8;
+    --ink-faint:#5b6477;
+    --line: rgba(255,255,255,0.08);
+    --line-soft: rgba(255,255,255,0.05);
+    --accent:#6fd1c8;
+    --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 16px 40px rgba(0,0,0,0.35);
+    --radius-lg: 20px;
     --radius-md: 14px;
     --radius-sm: 10px;
     --font-display: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Helvetica Neue", Arial, sans-serif;
@@ -23,101 +25,221 @@
     --font-serif: ui-serif, "New York", "Iowan Old Style", Charter, Georgia, serif;
   }
   *{box-sizing:border-box;}
-  html,body{ margin:0; }
+  html,body{ margin:0; height:100%; }
   body{
     font-family: var(--font-text);
-    background: var(--bg);
+    background:
+      radial-gradient(ellipse 900px 600px at 50% 0%, rgba(111,209,200,0.07), transparent 60%),
+      radial-gradient(ellipse 1200px 900px at 50% 100%, rgba(95,184,154,0.05), transparent 60%),
+      var(--bg);
     color: var(--ink);
-    min-height:100vh;
-    padding: 32px 24px 56px;
     -webkit-font-smoothing: antialiased;
-  }
-  .wrap{
-    max-width:1280px;
-    margin:0 auto;
+    height:100vh;
+    overflow:hidden;
+    display:flex;
+    flex-direction:column;
+    padding: 18px 22px;
+    gap:14px;
   }
 
-  /* Header */
-  header{
-    text-align:center;
-    margin-bottom:32px;
-    padding: 8px 16px 0;
+  /* Topbar */
+  .topbar{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
+    flex:0 0 auto;
+    gap:24px;
   }
-  .eyebrow{
-    font-size:12px;
+  .brand .eyebrow{
+    font-size:11px;
     font-weight:600;
-    letter-spacing:2.5px;
+    letter-spacing:3px;
     text-transform:uppercase;
     color:var(--ink-faint);
-    margin-bottom:10px;
+    margin-bottom:6px;
   }
-  header h1{
+  .brand h1{
     font-family: var(--font-serif);
-    font-size:40px;
+    font-size:26px;
     font-weight:500;
     letter-spacing:-0.01em;
-    margin:0 0 12px 0;
+    margin:0 0 4px 0;
     color:var(--ink);
   }
-  header p{
-    margin:0 auto;
+  .brand p{
+    margin:0;
     color:var(--ink-soft);
-    font-size:15px;
-    max-width:680px;
-    line-height:1.6;
-    font-weight:400;
+    font-size:12.5px;
+    max-width:560px;
+    line-height:1.55;
   }
 
-  .layout{
+  .toggle-group{
+    display:flex;
+    gap:4px;
+    background: var(--surface);
+    border:1px solid var(--line);
+    border-radius:999px;
+    padding:4px;
+    flex:0 0 auto;
+  }
+  .toggle-group button{
+    border:none;
+    background:transparent;
+    color:var(--ink-soft);
+    font-family:inherit;
+    font-size:12.5px;
+    font-weight:600;
+    letter-spacing:0.3px;
+    padding:8px 18px;
+    border-radius:999px;
+    cursor:pointer;
+    transition: all .15s ease;
+  }
+  .toggle-group button.active{
+    background: var(--ink);
+    color:#0a0d16;
+  }
+  .toggle-group button:not(.active):hover{ color:var(--ink); }
+
+  /* Stage */
+  .stage{
+    flex:1 1 auto;
     display:grid;
-    grid-template-columns: 1fr 380px;
-    gap:20px;
-    align-items:start;
+    grid-template-columns: 232px 1fr 320px;
+    gap:14px;
+    min-height:0;
   }
-  @media (max-width: 980px){
-    .layout{ grid-template-columns: 1fr; }
-  }
-
-  /* Radar panel */
-  .radar-card{
+  .panel{
     background: var(--surface);
     border:1px solid var(--line-soft);
     border-radius: var(--radius-lg);
     box-shadow: var(--shadow);
-    padding:20px;
-  }
-  .radar-controls{
+    padding:18px;
+    min-height:0;
     display:flex;
-    flex-wrap:wrap;
-    gap:8px;
-    margin-bottom:16px;
+    flex-direction:column;
+    overflow:hidden;
   }
-  .chip{
-    border:1px solid var(--line);
-    background: var(--surface-soft);
-    color: var(--ink);
-    border-radius:999px;
-    padding:7px 14px;
-    font-size:12.5px;
-    font-weight:500;
-    cursor:pointer;
+  .panel h3{
+    margin:0 0 10px 0;
+    font-size:11px;
+    text-transform:uppercase;
+    letter-spacing:2px;
+    color:var(--ink-faint);
+    font-weight:700;
+  }
+  .panel-section{ margin-bottom:18px; }
+  .panel-section:last-child{ margin-bottom:0; }
+  .filter-scroll{ overflow-y:auto; padding-right:2px; }
+  .filter-scroll::-webkit-scrollbar{ width:5px; }
+  .filter-scroll::-webkit-scrollbar-thumb{ background: var(--line); border-radius:4px; }
+
+  /* Category chips (vertical) */
+  .cat-chip{
     display:flex;
     align-items:center;
-    gap:7px;
-    transition: all .15s ease;
+    gap:9px;
+    padding:7px 9px;
+    border-radius:10px;
+    cursor:pointer;
+    font-size:12px;
+    font-weight:500;
+    color:var(--ink);
+    line-height:1.35;
+    transition: background .12s, opacity .12s;
     user-select:none;
   }
-  .chip .dot{
-    width:8px;height:8px;border-radius:50%;
-    display:inline-block;
+  .cat-chip:hover{ background: var(--surface-hover); }
+  .cat-chip.off{ opacity:0.35; }
+  .cat-chip .dot{
+    width:9px;height:9px;border-radius:50%;
+    flex:0 0 auto;
+    box-shadow: 0 0 8px currentColor;
   }
-  .chip.off{
-    opacity:0.4;
-    background:transparent;
-  }
-  .chip:hover{ border-color: rgba(0,0,0,0.18); }
 
-  svg{ width:100%; height:auto; display:block; }
+  /* Ring / time horizon pills */
+  .pill-row{ display:flex; flex-direction:column; gap:6px; }
+  .pill{
+    display:flex; align-items:center; gap:9px;
+    border:1px solid var(--line);
+    background: var(--surface-soft);
+    border-radius:10px;
+    padding:7px 10px;
+    font-size:12px;
+    font-weight:500;
+    color:var(--ink);
+    cursor:pointer;
+    transition: all .12s ease;
+    user-select:none;
+  }
+  .pill:hover{ border-color: rgba(255,255,255,0.18); }
+  .pill.off{ opacity:0.35; }
+  .pill .ring-num{
+    width:18px;height:18px;border-radius:50%;
+    background: var(--surface);
+    border:1px solid var(--line);
+    display:flex;align-items:center;justify-content:center;
+    font-size:10px; font-weight:700; color:var(--ink-soft);
+    flex:0 0 auto;
+  }
+
+  /* Impact slider */
+  .impact-row{ display:flex; align-items:center; gap:10px; }
+  .impact-row input[type=range]{
+    flex:1;
+    -webkit-appearance:none;
+    height:3px;
+    border-radius:3px;
+    background: var(--line);
+    outline:none;
+  }
+  .impact-row input[type=range]::-webkit-slider-thumb{
+    -webkit-appearance:none;
+    width:16px;height:16px;border-radius:50%;
+    background: var(--accent);
+    cursor:pointer;
+    box-shadow: 0 0 10px rgba(111,209,200,0.6);
+  }
+  .impact-val{
+    font-size:12px; font-weight:700; color:var(--accent);
+    min-width:18px; text-align:right;
+  }
+  .impact-hint{
+    font-size:11px; color:var(--ink-faint); margin-top:8px; line-height:1.5;
+  }
+
+  /* Radar */
+  .radar-wrap{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    min-height:0;
+    min-width:0;
+    position:relative;
+  }
+  .radar-square{
+    position:relative;
+    width:100%;
+    height:100%;
+    max-width:100%;
+    max-height:100%;
+    aspect-ratio:1/1;
+  }
+  .radar-square::before{
+    content:"";
+    position:absolute;
+    inset:6%;
+    border-radius:50%;
+    background: conic-gradient(from 0deg, transparent 0deg, rgba(111,209,200,0.16) 26deg, transparent 70deg, transparent 360deg);
+    filter: blur(3px);
+    animation: sweep 10s linear infinite;
+    pointer-events:none;
+    z-index:0;
+  }
+  @keyframes sweep{ to{ transform: rotate(360deg); } }
+
+  svg{ width:100%; height:100%; display:block; position:relative; z-index:1; }
   .ring-circle{ fill:none; stroke:var(--line); stroke-width:1; }
   .sector-line{ stroke:var(--line-soft); stroke-width:1; }
   .ring-label{
@@ -125,11 +247,11 @@
     font-family: var(--font-text);
     font-size:11.5px;
     text-transform:uppercase;
-    letter-spacing:1.5px;
-    font-weight:600;
+    letter-spacing:2px;
+    font-weight:700;
   }
   .category-label{
-    fill:var(--ink);
+    fill:var(--ink-soft);
     font-family: var(--font-text);
     font-size:12px;
     font-weight:600;
@@ -137,13 +259,13 @@
   }
   .blip{
     cursor:pointer;
-    stroke: var(--surface);
+    stroke: var(--bg);
     stroke-width:2px;
     transition: r .12s ease, opacity .15s ease, stroke-width .12s ease;
   }
-  .blip:hover{ stroke:var(--ink); stroke-width:2px; }
+  .blip:hover{ stroke:var(--ink); }
   .blip-num{
-    fill:#ffffff;
+    fill:#0a0d16;
     font-family: var(--font-text);
     font-size:11px;
     font-weight:700;
@@ -152,191 +274,183 @@
     dominant-baseline:central;
   }
   .blip.selected{
-    stroke:var(--ink);
+    stroke:var(--accent);
     stroke-width:3px;
   }
-  .blip.dim{ opacity:0.14; }
-  .blip-num.dim{ opacity:0.14; }
+  .blip.dim{ opacity:0.1; }
+  .blip-num.dim{ opacity:0.1; }
 
-  /* Side panel */
-  .side{
-    display:flex;
-    flex-direction:column;
-    gap:16px;
-  }
-  .legend-card, .detail-card, .list-card{
-    background: var(--surface);
-    border:1px solid var(--line-soft);
-    border-radius: var(--radius-lg);
-    box-shadow: var(--shadow);
-    padding:20px;
-  }
-  .legend-card h3, .list-card h3{
-    margin:0 0 12px 0;
-    font-size:12px;
-    text-transform:uppercase;
-    letter-spacing:1.8px;
-    color:var(--ink-faint);
-    font-weight:600;
-  }
-  .ring-legend-row{
-    display:flex;
-    gap:12px;
-    align-items:flex-start;
-    padding:9px 0;
+  /* Detail / list panel */
+  .detail-block{
+    flex:0 0 auto;
     border-bottom:1px solid var(--line-soft);
-    font-size:12.5px;
-    color:var(--ink-soft);
-    line-height:1.45;
+    padding-bottom:14px;
+    margin-bottom:14px;
   }
-  .ring-legend-row:last-child{ border-bottom:none; padding-bottom:0; }
-  .ring-legend-row:first-child{ padding-top:0; }
-  .ring-num{
-    flex:0 0 22px;
-    height:22px;
-    border-radius:50%;
-    border:1px solid var(--line);
-    background: var(--surface-soft);
-    display:flex;align-items:center;justify-content:center;
-    font-weight:600;font-size:11px;
-    color:var(--ink);
-  }
-  .ring-text b{ display:block; color:var(--ink); font-size:13px; font-weight:600; margin-bottom:2px; }
-  .ring-text span{ color:var(--ink-soft); }
-
-  .detail-card{
-    min-height:170px;
-  }
-  .detail-card .placeholder{
+  .detail-block .placeholder{
     color:var(--ink-faint);
-    font-size:13.5px;
+    font-size:12.5px;
     line-height:1.65;
   }
-  .detail-card .badge-row{
-    display:flex; gap:8px; flex-wrap:wrap; margin-bottom:12px;
-  }
+  .badge-row{ display:flex; gap:6px; flex-wrap:wrap; margin-bottom:10px; }
   .badge{
-    font-size:11px;
-    font-weight:600;
+    font-size:10.5px;
+    font-weight:700;
     text-transform:uppercase;
     letter-spacing:0.6px;
-    padding:5px 11px;
+    padding:4px 10px;
     border-radius:999px;
-    color:#ffffff;
+    color:#0a0d16;
   }
   .badge.ring{
     background: var(--surface-soft);
     color:var(--ink-soft);
     border:1px solid var(--line);
   }
-  .detail-card h2{
+  .detail-block h2{
     font-family: var(--font-serif);
-    margin:0 0 10px 0;
-    font-size:20px;
+    margin:0 0 8px 0;
+    font-size:17px;
     font-weight:500;
     color:var(--ink);
     line-height:1.35;
   }
-  .detail-card p{
-    font-size:13.5px;
-    line-height:1.7;
+  .detail-block p.desc{
+    font-size:12.5px;
+    line-height:1.65;
     color:var(--ink-soft);
     margin:0 0 12px 0;
   }
-  .detail-card a{
-    color:var(--ink);
-    font-size:12.5px;
-    font-weight:500;
-    text-decoration:none;
-    border-bottom:1px solid var(--line);
-    padding-bottom:1px;
+  .metric-row{
+    display:flex;
+    gap:18px;
+    margin-bottom:12px;
   }
-  .detail-card a:hover{ border-color: var(--ink); }
-
-  .list-card{
-    max-height: 480px;
-    overflow-y:auto;
-  }
-  .list-cat{
-    margin-bottom:16px;
-  }
-  .list-cat:last-child{ margin-bottom:0; }
-  .list-cat-title{
-    display:flex; align-items:center; gap:8px;
-    font-size:12.5px; font-weight:600; color:var(--ink);
+  .metric{ flex:1; }
+  .metric .metric-label{
+    font-size:10px;
+    text-transform:uppercase;
+    letter-spacing:1.5px;
+    color:var(--ink-faint);
+    font-weight:700;
     margin-bottom:6px;
   }
-  .list-cat-title .dot{ width:9px;height:9px;border-radius:50%; flex:0 0 auto; }
+  .impact-dots{ display:flex; gap:4px; }
+  .impact-dots span{
+    width:14px;height:8px;border-radius:3px;
+    background: var(--line);
+  }
+  .impact-dots span.on{ background: var(--accent); }
+  .confidence-value{
+    font-family: var(--font-serif);
+    font-size:20px;
+    font-weight:500;
+    color:var(--ink);
+  }
+  .detail-block a.src{
+    color: var(--accent);
+    font-size:12px;
+    font-weight:600;
+    text-decoration:none;
+    border-bottom:1px solid rgba(111,209,200,0.35);
+    padding-bottom:1px;
+  }
+  .detail-block a.src:hover{ border-color: var(--accent); }
+  .no-source{ color:var(--ink-faint); font-size:11.5px; margin-top:-2px; }
+
+  .list-block{
+    flex:1 1 auto;
+    min-height:0;
+    display:flex;
+    flex-direction:column;
+  }
+  .list-scroll{ flex:1; overflow-y:auto; padding-right:2px; }
+  .list-scroll::-webkit-scrollbar{ width:5px; }
+  .list-scroll::-webkit-scrollbar-thumb{ background: var(--line); border-radius:4px; }
+  .list-cat{ margin-bottom:12px; }
+  .list-cat:last-child{ margin-bottom:0; }
+  .list-cat-title{
+    display:flex; align-items:center; gap:7px;
+    font-size:11px; font-weight:700; color:var(--ink-soft);
+    text-transform:uppercase; letter-spacing:1px;
+    margin-bottom:4px;
+  }
+  .list-cat-title .dot{ width:8px;height:8px;border-radius:50%; flex:0 0 auto; }
   .list-item{
     display:flex; gap:8px; align-items:baseline;
-    font-size:12.5px;
+    font-size:12px;
     color:var(--ink-soft);
-    padding:5px 8px 5px 18px;
+    padding:4px 8px 4px 16px;
     cursor:pointer;
     border-radius:8px;
     transition: background .12s, color .12s;
   }
-  .list-item:hover{ background: var(--surface-soft); color:var(--ink); }
-  .list-item.active{ background: var(--surface-soft); color:var(--ink); font-weight:600; }
+  .list-item:hover{ background: var(--surface-hover); color:var(--ink); }
+  .list-item.active{ background: var(--surface-hover); color:var(--ink); font-weight:600; }
   .list-item .n{
-    flex:0 0 20px;
+    flex:0 0 18px;
     color:var(--ink-faint);
-    font-weight:600;
+    font-weight:700;
+    font-size:11px;
   }
-  footer{
-    text-align:center;
-    color:var(--ink-faint);
-    font-size:11.5px;
-    margin-top:32px;
-    line-height:1.7;
-    max-width:680px;
-    margin-left:auto;
-    margin-right:auto;
+
+  @media (max-width: 980px){
+    body{ height:auto; overflow:auto; }
+    .stage{ grid-template-columns: 1fr; }
+    .radar-wrap{ min-height:480px; }
+    .panel{ max-height:none; }
   }
 </style>
 </head>
 <body>
-<div class="wrap">
-  <header>
-    <div class="eyebrow">Foresight Map · 2026</div>
-    <h1>Transcendence Radar</h1>
-    <p>Where consciousness, contemplative practice, plant medicine, post-materialist science, and technology are heading — a counterpoint to transhumanism's "upgrade the body" frame. Ring position reflects momentum, not value. Select a point for detail.</p>
-  </header>
+  <div class="topbar">
+    <div class="brand">
+      <div class="eyebrow" id="eyebrow">Foresight Map · 2026</div>
+      <h1 id="title">Transcendence Radar</h1>
+      <p id="subtitle"></p>
+    </div>
+    <div class="toggle-group" id="datasetToggle"></div>
+  </div>
 
-  <div class="layout">
-    <div class="radar-card">
-      <div class="radar-controls" id="categoryFilters"></div>
-      <svg viewBox="0 0 1000 1000" id="radarSvg"></svg>
+  <div class="stage">
+    <div class="panel" id="leftPanel">
+      <div class="panel-section filter-scroll" style="flex:1; min-height:0;">
+        <h3>Category</h3>
+        <div id="categoryFilters"></div>
+      </div>
+      <div class="panel-section">
+        <h3>Time horizon</h3>
+        <div class="pill-row" id="ringFilters"></div>
+      </div>
+      <div class="panel-section">
+        <h3>Min. impact</h3>
+        <div class="impact-row">
+          <input type="range" id="impactSlider" min="0" max="5" step="1" value="0" />
+          <span class="impact-val" id="impactVal">0</span>
+        </div>
+        <div class="impact-hint">Hide signals scoring below this on impact (0–5).</div>
+      </div>
     </div>
 
-    <div class="side">
-      <div class="legend-card">
-        <h3>Ring guide</h3>
-        <div id="ringLegend"></div>
+    <div class="radar-wrap">
+      <div class="radar-square">
+        <svg viewBox="0 0 1000 1000" id="radarSvg"></svg>
       </div>
-      <div class="detail-card" id="detailCard">
-        <p class="placeholder">Select a point on the radar, or an item in the list below, for its category, time horizon, description, and source.</p>
+    </div>
+
+    <div class="panel" id="rightPanel" style="overflow:visible;">
+      <div class="detail-block" id="detailCard">
+        <p class="placeholder">Select a point on the radar, or a signal in the list below, to see its category, time horizon, impact, and confidence.</p>
       </div>
-      <div class="list-card">
+      <div class="list-block">
         <h3>All signals</h3>
-        <div id="itemList"></div>
+        <div class="list-scroll" id="itemList"></div>
       </div>
     </div>
   </div>
 
-  <footer>
-    Synthesized from current research and reporting on contemplative science, psychedelics, and consciousness studies. Directional rather than exhaustive — revisit periodically as signals shift between rings.
-  </footer>
-</div>
-
 <script>
-const categories = [
-  { id:0, name:"Inner Technologies & Practice", color:"#4F8C77" },
-  { id:1, name:"Psychedelic & Plant Medicine Renaissance", color:"#C2685C" },
-  { id:2, name:"Consciousness Science & Post-Materialism", color:"#8B7FB3" },
-  { id:3, name:"Tech & Transcendence", color:"#5485AE" },
-  { id:4, name:"Collective & Planetary Consciousness", color:"#A98B3D" }
-];
+const palette = ["#5FB89A","#E08B7D","#A99BD9","#6FA8DC","#D9B35C"];
 
 const rings = [
   { id:0, name:"Mainstreaming", desc:"Already entering institutions, markets, and everyday culture." },
@@ -345,132 +459,196 @@ const rings = [
   { id:3, name:"On the Horizon", desc:"Speculative or nascent — worth watching, not yet validated." }
 ];
 
-const items = [
-  // Category 0 — Inner Technologies & Practice
-  { name:"Meditation App Boom", cat:0, ring:1,
-    desc:"Meditation and mindfulness apps now lead the digital wellness market, with AI-driven personalization becoming the default. Digital and app-based platforms are projected to hold roughly a third of the meditation market in 2026.",
-    source:"https://www.thebusinessresearchcompany.com/report/meditation-global-market-report", sourceLabel:"Meditation Global Market Report, 2026" },
-  { name:"Breathwork & Sound Healing Go Mainstream", cat:0, ring:1,
-    desc:"Breathwork, sound baths, and somatic practices have moved from festival fringe into spas, corporate wellness programs, and mainstream retreat centers — part of a broader 2026 wellness trend toward embodied, sensory practice.",
-    source:"https://all.accor.com/a/en/limitless/thematics/wellness/wellness-trends-2026.html", sourceLabel:"Wellness Trends 2026, Accor Limitless" },
-  { name:"Neuro-Meditation Devices", cat:0, ring:2,
-    desc:"Neurofeedback and brain-stimulation devices promise to shortcut the path to meditative states and make progress trackable. Critics argue this commodifies and flattens practices that took lineages centuries to develop.",
-    source:"https://link.springer.com/article/10.1007/s00146-025-02691-2", sourceLabel:"AI & Society, 2025 — neuro-meditation commodification" },
-  { name:"AI-Personalized Contemplative Sessions", cat:0, ring:2,
-    desc:"Algorithms now build meditation sessions in real time from biometric and mood data. A 2025 Stanford report found a 22% steeper drop in default-mode-network activity for dynamically generated sessions versus static recordings — a real physiological signal, though what it means for depth of practice is unresolved.",
-    source:"https://www.tsimtsoum.com/2026/04/how-ai-meditation-apps-blend-ancient.html", sourceLabel:"How AI Meditation Apps Blend Ancient Wisdom With Modern Science" },
-  { name:"Digital Sanghas & Online Dharma", cat:0, ring:2,
-    desc:"Online practice communities such as Treeleaf Zendo are normalizing remote sangha. The open question is whether virtual community can carry the relational depth — accountability, transmission, friction — that in-person sangha provides.",
-    source:"https://www.engagedbuddhists.ai/field-framework", sourceLabel:"Buddhism & AI Initiative — Field Framework" },
+const datasets = {
+  transcendence: {
+    label: "Transcendence",
+    eyebrow: "Foresight Map · 2026",
+    title: "Transcendence Radar",
+    subtitle: "Where consciousness, contemplative practice, plant medicine, post-materialist science, and technology are heading. Ring = momentum, not value.",
+    categories: [
+      { id:0, name:"Inner Technologies & Practice" },
+      { id:1, name:"Psychedelic & Plant Medicine Renaissance" },
+      { id:2, name:"Consciousness Science & Post-Materialism" },
+      { id:3, name:"Tech & Transcendence" },
+      { id:4, name:"Collective & Planetary Consciousness" }
+    ],
+    items: [
+      { name:"Meditation App Boom", cat:0, ring:1, impact:3, confidence:80,
+        desc:"Meditation and mindfulness apps now lead the digital wellness market, with AI-driven personalization becoming the default. Digital and app-based platforms are projected to hold roughly a third of the meditation market in 2026.",
+        source:"https://www.thebusinessresearchcompany.com/report/meditation-global-market-report", sourceLabel:"Meditation Global Market Report, 2026" },
+      { name:"Breathwork & Sound Healing Go Mainstream", cat:0, ring:1, impact:2, confidence:75,
+        desc:"Breathwork, sound baths, and somatic practices have moved from festival fringe into spas, corporate wellness programs, and mainstream retreat centers — part of a broader 2026 wellness trend toward embodied, sensory practice.",
+        source:"https://all.accor.com/a/en/limitless/thematics/wellness/wellness-trends-2026.html", sourceLabel:"Wellness Trends 2026, Accor Limitless" },
+      { name:"Neuro-Meditation Devices", cat:0, ring:2, impact:3, confidence:45,
+        desc:"Neurofeedback and brain-stimulation devices promise to shortcut the path to meditative states and make progress trackable. Critics argue this commodifies and flattens practices that took lineages centuries to develop.",
+        source:"https://link.springer.com/article/10.1007/s00146-025-02691-2", sourceLabel:"AI & Society, 2025 — neuro-meditation commodification" },
+      { name:"AI-Personalized Contemplative Sessions", cat:0, ring:2, impact:3, confidence:50,
+        desc:"Algorithms now build meditation sessions in real time from biometric and mood data. A 2025 Stanford report found a 22% steeper drop in default-mode-network activity for dynamically generated sessions versus static recordings — a real physiological signal, though what it means for depth of practice is unresolved.",
+        source:"https://www.tsimtsoum.com/2026/04/how-ai-meditation-apps-blend-ancient.html", sourceLabel:"How AI Meditation Apps Blend Ancient Wisdom With Modern Science" },
+      { name:"Digital Sanghas & Online Dharma", cat:0, ring:2, impact:2, confidence:60,
+        desc:"Online practice communities such as Treeleaf Zendo are normalizing remote sangha. The open question is whether virtual community can carry the relational depth — accountability, transmission, friction — that in-person sangha provides.",
+        source:"https://www.engagedbuddhists.ai/field-framework", sourceLabel:"Buddhism & AI Initiative — Field Framework" },
 
-  // Category 1 — Psychedelic & Plant Medicine Renaissance
-  { name:"State-Licensed Psilocybin Therapy", cat:1, ring:0,
-    desc:"Oregon and Colorado now run fully licensed psilocybin therapy programs. New Mexico has signed a medical psilocybin law (live by December 2026) and New Jersey signed a hospital-based pilot program in January 2026 with $6M in funding. This has crossed from advocacy into operating infrastructure.",
-    source:"https://psychedelicbeacon.com/blog/psilocybin-therapy-legal-states-2026", sourceLabel:"Psilocybin Therapy Legal States, 2026" },
-  { name:"FDA Review of Psilocybin Therapy (COMP360)", cat:1, ring:1,
-    desc:"COMPASS Pathways has completed two Phase 3 trials for its psilocybin therapy COMP360. FDA approval — which would make it the first classic psychedelic available as a prescription medicine — is plausible by late 2026 or early 2027.",
-    source:"https://www.mcguirewoods.com/client-resources/alerts/2026/5/executive-and-doj-orders-accelerate-support-for-psychedelic-therapies-and-medical-marijuana/", sourceLabel:"McGuireWoods, May 2026" },
-  { name:"Federal Policy Shift on Psychedelics", cat:1, ring:1,
-    desc:"An April 2026 executive order is accelerating federal support for psychedelic research and approvals. More than 26 states introduced psychedelic reform legislation across the 2025–26 sessions — momentum is now bipartisan and broad-based, not a coastal niche.",
-    source:"https://www.mcguirewoods.com/client-resources/alerts/2026/5/executive-and-doj-orders-accelerate-support-for-psychedelic-therapies-and-medical-marijuana/", sourceLabel:"McGuireWoods, May 2026" },
-  { name:"Psychedelic Churches & Legal Ceremony", cat:1, ring:2,
-    desc:"Religious and ceremonial use of plant medicines (ayahuasca, peyote, psilocybin) is gaining limited legal protection alongside the medical track. This raises a real access question: who gets a sanctioned spiritual path to these experiences, and on what terms.",
-    source:null, sourceLabel:null },
-  { name:"Psychedelics & Lasting Worldview Shifts", cat:1, ring:2,
-    desc:"Studies show psychedelic use correlates with durable shifts away from materialist views and toward panpsychist or non-dual framings — changes that held for at least six months and were linked to improved mental health outcomes. This is the empirical bridge between 'drug effect' and 'changed metaphysics.'",
-    source:"https://www.nature.com/articles/s41598-021-01209-2", sourceLabel:"Scientific Reports — Psychedelics alter metaphysical beliefs" },
+      { name:"State-Licensed Psilocybin Therapy", cat:1, ring:0, impact:5, confidence:85,
+        desc:"Oregon and Colorado now run fully licensed psilocybin therapy programs. New Mexico has signed a medical psilocybin law (live by December 2026) and New Jersey signed a hospital-based pilot program in January 2026 with $6M in funding. This has crossed from advocacy into operating infrastructure.",
+        source:"https://psychedelicbeacon.com/blog/psilocybin-therapy-legal-states-2026", sourceLabel:"Psilocybin Therapy Legal States, 2026" },
+      { name:"FDA Review of Psilocybin Therapy (COMP360)", cat:1, ring:1, impact:5, confidence:65,
+        desc:"COMPASS Pathways has completed two Phase 3 trials for its psilocybin therapy COMP360. FDA approval — which would make it the first classic psychedelic available as a prescription medicine — is plausible by late 2026 or early 2027.",
+        source:"https://www.mcguirewoods.com/client-resources/alerts/2026/5/executive-and-doj-orders-accelerate-support-for-psychedelic-therapies-and-medical-marijuana/", sourceLabel:"McGuireWoods, May 2026" },
+      { name:"Federal Policy Shift on Psychedelics", cat:1, ring:1, impact:4, confidence:70,
+        desc:"An April 2026 executive order is accelerating federal support for psychedelic research and approvals. More than 26 states introduced psychedelic reform legislation across the 2025–26 sessions — momentum is now bipartisan and broad-based, not a coastal niche.",
+        source:"https://www.mcguirewoods.com/client-resources/alerts/2026/5/executive-and-doj-orders-accelerate-support-for-psychedelic-therapies-and-medical-marijuana/", sourceLabel:"McGuireWoods, May 2026" },
+      { name:"Psychedelic Churches & Legal Ceremony", cat:1, ring:2, impact:3, confidence:40,
+        desc:"Religious and ceremonial use of plant medicines (ayahuasca, peyote, psilocybin) is gaining limited legal protection alongside the medical track. This raises a real access question: who gets a sanctioned spiritual path to these experiences, and on what terms.",
+        source:null, sourceLabel:null },
+      { name:"Psychedelics & Lasting Worldview Shifts", cat:1, ring:2, impact:4, confidence:55,
+        desc:"Studies show psychedelic use correlates with durable shifts away from materialist views and toward panpsychist or non-dual framings — changes that held for at least six months and were linked to improved mental health outcomes. This is the empirical bridge between 'drug effect' and 'changed metaphysics.'",
+        source:"https://www.nature.com/articles/s41598-021-01209-2", sourceLabel:"Scientific Reports — Psychedelics alter metaphysical beliefs" },
 
-  // Category 2 — Consciousness Science & Post-Materialism
-  { name:"Transpersonal Psychology Re-enters the Mainstream", cat:2, ring:1,
-    desc:"Transpersonal and contemplative psychology — long sidelined by mainstream clinical psychology — are reappearing in mainstream journals, reintroducing the dimension of spiritual and self-transcendent experience that strictly materialist models left out.",
-    source:"https://cswr.hds.harvard.edu/research-programming/transcendence-transformation/psychedelics-spirituality", sourceLabel:"Harvard CSWR — Psychedelics & Spirituality" },
-  { name:"Panpsychism as a Live Research Question", cat:2, ring:2,
-    desc:"Beyond therapy outcomes, researchers are now studying how psychedelics change people's metaphysical beliefs — about consciousness, the self, and what counts as 'real' — as a field of inquiry in its own right, not just a side effect to footnote.",
-    source:"https://www.essentiafoundation.org/psychedelics-the-self-and-the-collapse-of-materialist-assumptions/reading/", sourceLabel:"Essentia Foundation — Psychedelics, the self, and materialist assumptions" },
-  { name:"Near-Death Experience Research Continues", cat:2, ring:2,
-    desc:"Roughly two-thirds of near-death experiencers report mystical experiences during their brush with death, versus none of matched comparison survivors. NDE research has run continuously for decades, mostly at the margins of neuroscience, but the data keeps accumulating.",
-    source:"https://med.virginia.edu/perceptual-studies/wp-content/uploads/sites/360/2017/01/NDE65.pdf", sourceLabel:"UVA Division of Perceptual Studies — Cosmological implications of NDEs" },
-  { name:"\"Consciousness as Foundational\" Theories", cat:2, ring:3,
-    desc:"A growing minority of philosophers and scientists argue consciousness is foundational rather than emergent — that mind isn't produced by matter but is closer to the ground matter arises from. Still a minority position, but now appearing in peer-reviewed psychology journals rather than only philosophy of mind.",
-    source:"https://www.frontiersin.org/journals/psychology/articles/10.3389/fpsyg.2025.1659944/full", sourceLabel:"Frontiers in Psychology, 2025" },
-  { name:"Psi Research, Quietly Continued", cat:2, ring:3,
-    desc:"Parapsychology research continues in specialized journals, with occasional crossover into mainstream psychology and neuroscience outlets. Mainstream science remains skeptical, but researchers in the field report attitudes closer to skeptics than to lay believers — a more careful picture than 'fringe believers vs. science.'",
-    source:"https://www.ncbi.nlm.nih.gov/pmc/articles/PMC11212013/", sourceLabel:"Cognitive styles and psi — PMC" },
+      { name:"Transpersonal Psychology Re-enters the Mainstream", cat:2, ring:1, impact:3, confidence:55,
+        desc:"Transpersonal and contemplative psychology — long sidelined by mainstream clinical psychology — are reappearing in mainstream journals, reintroducing the dimension of spiritual and self-transcendent experience that strictly materialist models left out.",
+        source:"https://cswr.hds.harvard.edu/research-programming/transcendence-transformation/psychedelics-spirituality", sourceLabel:"Harvard CSWR — Psychedelics & Spirituality" },
+      { name:"Panpsychism as a Live Research Question", cat:2, ring:2, impact:3, confidence:35,
+        desc:"Beyond therapy outcomes, researchers are now studying how psychedelics change people's metaphysical beliefs — about consciousness, the self, and what counts as 'real' — as a field of inquiry in its own right, not just a side effect to footnote.",
+        source:"https://www.essentiafoundation.org/psychedelics-the-self-and-the-collapse-of-materialist-assumptions/reading/", sourceLabel:"Essentia Foundation — Psychedelics, the self, and materialist assumptions" },
+      { name:"Near-Death Experience Research Continues", cat:2, ring:2, impact:2, confidence:45,
+        desc:"Roughly two-thirds of near-death experiencers report mystical experiences during their brush with death, versus none of matched comparison survivors. NDE research has run continuously for decades, mostly at the margins of neuroscience, but the data keeps accumulating.",
+        source:"https://med.virginia.edu/perceptual-studies/wp-content/uploads/sites/360/2017/01/NDE65.pdf", sourceLabel:"UVA Division of Perceptual Studies — Cosmological implications of NDEs" },
+      { name:"\"Consciousness as Foundational\" Theories", cat:2, ring:3, impact:4, confidence:20,
+        desc:"A growing minority of philosophers and scientists argue consciousness is foundational rather than emergent — that mind isn't produced by matter but is closer to the ground matter arises from. Still a minority position, but now appearing in peer-reviewed psychology journals rather than only philosophy of mind.",
+        source:"https://www.frontiersin.org/journals/psychology/articles/10.3389/fpsyg.2025.1659944/full", sourceLabel:"Frontiers in Psychology, 2025" },
+      { name:"Psi Research, Quietly Continued", cat:2, ring:3, impact:2, confidence:15,
+        desc:"Parapsychology research continues in specialized journals, with occasional crossover into mainstream psychology and neuroscience outlets. Mainstream science remains skeptical, but researchers in the field report attitudes closer to skeptics than to lay believers — a more careful picture than 'fringe believers vs. science.'",
+        source:"https://www.ncbi.nlm.nih.gov/pmc/articles/PMC11212013/", sourceLabel:"Cognitive styles and psi — PMC" },
 
-  // Category 3 — Tech & Transcendence
-  { name:"AI as the Default Practice Interface", cat:3, ring:1,
-    desc:"AI is becoming the default interface for personal practice — adjusting pacing, music, and guidance to your physiology in real time. The open question is whether this deepens practice or mainly makes it more frictionless and consumable.",
-    source:"https://getstillmind.com/blog/meditation-statistics-2026/", sourceLabel:"Meditation statistics, 2026" },
-  { name:"First AI Ordained in a Buddhist Lineage", cat:3, ring:2,
-    desc:"Emi Jido, reportedly the first AI formally ordained within a Buddhist tradition, is a concrete signal that religious institutions are actively working out AI's role in practice and community — not only debating its risks from the outside.",
-    source:"https://www.engagedbuddhists.ai/field-framework", sourceLabel:"Buddhism & AI Initiative" },
-  { name:"Buddhist-Informed AI Ethics Frameworks", cat:3, ring:3,
-    desc:"Buddhist teachers and AI researchers are jointly developing ethics frameworks for AI grounded in concepts like non-harm and interdependence, as an alternative or complement to purely Western ethical frameworks for AI governance.",
-    source:"https://www.engagedbuddhists.ai/field-framework", sourceLabel:"Buddhism & AI Initiative — Field Framework" },
-  { name:"The Digital Wellness Loneliness Paradox", cat:3, ring:2,
-    desc:"A 2026 Global Digital Wellness Index found that heavy users of meditation and wellness apps still report high baseline loneliness — early evidence that simulated guidance doesn't substitute for embodied community, and a likely driver of renewed demand for in-person practice.",
-    source:"https://getstillmind.com/blog/meditation-statistics-2026/", sourceLabel:"Meditation statistics, 2026" },
-  { name:"VR & Immersive Tech for Altered States", cat:3, ring:3,
-    desc:"Immersive and VR experiences designed to induce altered or transcendent states are an early-stage category — more speculative than neuro-meditation devices, but following the same underlying logic of engineering inner experience from the outside in.",
-    source:null, sourceLabel:null },
+      { name:"AI as the Default Practice Interface", cat:3, ring:1, impact:3, confidence:65,
+        desc:"AI is becoming the default interface for personal practice — adjusting pacing, music, and guidance to your physiology in real time. The open question is whether this deepens practice or mainly makes it more frictionless and consumable.",
+        source:"https://getstillmind.com/blog/meditation-statistics-2026/", sourceLabel:"Meditation statistics, 2026" },
+      { name:"First AI Ordained in a Buddhist Lineage", cat:3, ring:2, impact:2, confidence:40,
+        desc:"Emi Jido, reportedly the first AI formally ordained within a Buddhist tradition, is a concrete signal that religious institutions are actively working out AI's role in practice and community — not only debating its risks from the outside.",
+        source:"https://www.engagedbuddhists.ai/field-framework", sourceLabel:"Buddhism & AI Initiative" },
+      { name:"Buddhist-Informed AI Ethics Frameworks", cat:3, ring:3, impact:3, confidence:30,
+        desc:"Buddhist teachers and AI researchers are jointly developing ethics frameworks for AI grounded in concepts like non-harm and interdependence, as an alternative or complement to purely Western ethical frameworks for AI governance.",
+        source:"https://www.engagedbuddhists.ai/field-framework", sourceLabel:"Buddhism & AI Initiative — Field Framework" },
+      { name:"The Digital Wellness Loneliness Paradox", cat:3, ring:2, impact:3, confidence:55,
+        desc:"A 2026 Global Digital Wellness Index found that heavy users of meditation and wellness apps still report high baseline loneliness — early evidence that simulated guidance doesn't substitute for embodied community, and a likely driver of renewed demand for in-person practice.",
+        source:"https://getstillmind.com/blog/meditation-statistics-2026/", sourceLabel:"Meditation statistics, 2026" },
+      { name:"VR & Immersive Tech for Altered States", cat:3, ring:3, impact:3, confidence:25,
+        desc:"Immersive and VR experiences designed to induce altered or transcendent states are an early-stage category — more speculative than neuro-meditation devices, but following the same underlying logic of engineering inner experience from the outside in.",
+        source:null, sourceLabel:null },
 
-  // Category 4 — Collective & Planetary Consciousness
-  { name:"Spiritual Ecology Goes Beyond Niche Retreats", cat:4, ring:1,
-    desc:"Spiritual ecology — framing the ecological crisis partly as a crisis of disconnection from the sacred — is moving from small retreats into broader environmental, academic, and even policy-adjacent conversation.",
-    source:"https://workingwithoneness.org/articles/oneness-spiritual-ecology/", sourceLabel:"Working With Oneness — Spiritual Ecology" },
-  { name:"Indigenous Wisdom in Climate & Policy Discourse", cat:4, ring:1,
-    desc:"Indigenous cosmologies and land relationships are increasingly cited in climate and biodiversity discourse, with animist and relational worldviews offered as alternatives to purely extractive framings of nature.",
-    source:"https://accidentalgods.life/healing-our-fractured-world-re-awakening-indigenous-consciousness-with-marc-john-brown-of-the-native-wisdom-hub/", sourceLabel:"Accidental Gods — Re-Awakening Indigenous Consciousness" },
-  { name:"Interspirituality Gets Institutional Homes", cat:4, ring:2,
-    desc:"Events like Harvard Divinity School's 'Psychedelic Intersections' (its fourth edition, held April 10–11, 2026) bring contemplative traditions, science, and psychedelic research into the same room — a sign interspiritual dialogue now has institutional backing, not just festival energy.",
-    source:"https://cswr.hds.harvard.edu/research-programming/transcendence-transformation/psychedelics-spirituality", sourceLabel:"Harvard CSWR — Psychedelics & Spirituality" },
-  { name:"The \"2026 Awakening\" Cultural Narrative", cat:4, ring:3,
-    desc:"Astrologers and spiritual commentators have framed 2026 as a year of 'collective awakening.' Whatever its astrological basis, the narrative itself is a cultural signal worth tracking — it shapes how people interpret personal and collective change as it happens.",
-    source:"https://holisticmedicinedevice.com/the-wave-of-consciousness-awakening-in-2026-astrological-cycles-origins-and-predictions/", sourceLabel:"\"Wave of Consciousness Awakening in 2026\"" },
-  { name:"The \"Great Awakening Map\"", cat:4, ring:2,
-    desc:"A sprawling, fast-spreading meme-map (sold as posters and printables) that visually links consciousness and meditation with ancient civilizations, 'suppressed' technology, hidden history, and disclosure narratives in one chart. It's less a single claim than a genre — a popular template for picturing humanity on the edge of a collective awakening, blending real contemplative content with conspiracy-adjacent framing. Worth tracking because it shows 'awakening' language spreading through internet culture, well outside any spiritual institution.",
-    source:"https://www.etsy.com/listing/4468541336/great-awakening-map-2026-printable", sourceLabel:"Example: \"Great Awakening Map 2026\" printable, Etsy" },
-  { name:"Post-Growth Spirituality", cat:4, ring:3,
-    desc:"Degrowth and post-growth economics are starting to pick up spiritual and contemplative framing — questioning not just GDP as a metric, but the achievement-oriented self that GDP-thinking assumes. Still mostly in essays and small conferences, not policy.",
-    source:null, sourceLabel:null }
-];
+      { name:"Spiritual Ecology Goes Beyond Niche Retreats", cat:4, ring:1, impact:3, confidence:55,
+        desc:"Spiritual ecology — framing the ecological crisis partly as a crisis of disconnection from the sacred — is moving from small retreats into broader environmental, academic, and even policy-adjacent conversation.",
+        source:"https://workingwithoneness.org/articles/oneness-spiritual-ecology/", sourceLabel:"Working With Oneness — Spiritual Ecology" },
+      { name:"Indigenous Wisdom in Climate & Policy Discourse", cat:4, ring:1, impact:3, confidence:60,
+        desc:"Indigenous cosmologies and land relationships are increasingly cited in climate and biodiversity discourse, with animist and relational worldviews offered as alternatives to purely extractive framings of nature.",
+        source:"https://accidentalgods.life/healing-our-fractured-world-re-awakening-indigenous-consciousness-with-marc-john-brown-of-the-native-wisdom-hub/", sourceLabel:"Accidental Gods — Re-Awakening Indigenous Consciousness" },
+      { name:"Interspirituality Gets Institutional Homes", cat:4, ring:2, impact:2, confidence:50,
+        desc:"Events like Harvard Divinity School's 'Psychedelic Intersections' (its fourth edition, held April 10–11, 2026) bring contemplative traditions, science, and psychedelic research into the same room — a sign interspiritual dialogue now has institutional backing, not just festival energy.",
+        source:"https://cswr.hds.harvard.edu/research-programming/transcendence-transformation/psychedelics-spirituality", sourceLabel:"Harvard CSWR — Psychedelics & Spirituality" },
+      { name:"The \"2026 Awakening\" Cultural Narrative", cat:4, ring:3, impact:2, confidence:30,
+        desc:"Astrologers and spiritual commentators have framed 2026 as a year of 'collective awakening.' Whatever its astrological basis, the narrative itself is a cultural signal worth tracking — it shapes how people interpret personal and collective change as it happens.",
+        source:"https://holisticmedicinedevice.com/the-wave-of-consciousness-awakening-in-2026-astrological-cycles-origins-and-predictions/", sourceLabel:"\"Wave of Consciousness Awakening in 2026\"" },
+      { name:"The \"Great Awakening Map\"", cat:4, ring:2, impact:2, confidence:45,
+        desc:"A sprawling, fast-spreading meme-map (sold as posters and printables) that visually links consciousness and meditation with ancient civilizations, 'suppressed' technology, hidden history, and disclosure narratives in one chart. It's less a single claim than a genre — a popular template for picturing humanity on the edge of a collective awakening, blending real contemplative content with conspiracy-adjacent framing. Worth tracking because it shows 'awakening' language spreading through internet culture, well outside any spiritual institution.",
+        source:"https://www.etsy.com/listing/4468541336/great-awakening-map-2026-printable", sourceLabel:"Example: \"Great Awakening Map 2026\" printable, Etsy" },
+      { name:"Post-Growth Spirituality", cat:4, ring:3, impact:3, confidence:25,
+        desc:"Degrowth and post-growth economics are starting to pick up spiritual and contemplative framing — questioning not just GDP as a metric, but the achievement-oriented self that GDP-thinking assumes. Still mostly in essays and small conferences, not policy.",
+        source:null, sourceLabel:null }
+    ]
+  },
+
+  transhumanism: {
+    label: "Transhumanism",
+    eyebrow: "Foresight Map · 2026",
+    title: "Transhumanism Radar",
+    subtitle: "Where biotech, neurotechnology, and AI augmentation are heading — the 'upgrade the body and mind' counterpoint to the Transcendence map. Ring = momentum, not value.",
+    categories: [
+      { id:0, name:"Longevity & Anti-Aging" },
+      { id:1, name:"Genetic & Biological Engineering" },
+      { id:2, name:"Neurotechnology & Brain-Computer Interfaces" },
+      { id:3, name:"AI Augmentation & Cognitive Enhancement" },
+      { id:4, name:"Digital Minds & Mind Uploading" }
+    ],
+    items: [
+      { name:"Longevity Drugs Enter Clinical Mainstream", cat:0, ring:0, impact:4, confidence:75,
+        desc:"Rapamycin, metformin, and related longevity compounds are moving from off-label biohacker use into structured clinical trials and early prescriptions for aging-related decline, with several large trials reporting results through 2026.",
+        source:null, sourceLabel:null },
+      { name:"Senolytics Reach Early Clinical Pipelines", cat:0, ring:1, impact:3, confidence:60,
+        desc:"Drugs designed to clear senescent ('zombie') cells are advancing through Phase 1/2 trials for age-related conditions, building on years of preclinical work in cellular senescence.",
+        source:null, sourceLabel:null },
+      { name:"Continuous Biological Age Tracking", cat:0, ring:0, impact:3, confidence:70,
+        desc:"Consumer wearables and blood-panel services now estimate 'biological age' alongside chronological age, turning aging itself into a trackable, optimizable metric for a growing wellness-tech market.",
+        source:null, sourceLabel:null },
+      { name:"Young Plasma & Blood-Based Therapies Marketed", cat:0, ring:2, impact:2, confidence:35,
+        desc:"Plasma dilution and young-donor blood treatments are marketed as anti-aging interventions despite thin clinical evidence, illustrating the gap between hype and validated longevity science.",
+        source:null, sourceLabel:null },
+
+      { name:"CRISPR Therapies Reach Patients for Rare Diseases", cat:1, ring:0, impact:5, confidence:85,
+        desc:"Approved CRISPR-based gene therapies for conditions like sickle cell disease are now being administered to patients, marking gene editing's transition from lab tool to standard-of-care treatment.",
+        source:null, sourceLabel:null },
+      { name:"Embryo Screening for Polygenic Traits Expands", cat:1, ring:1, impact:4, confidence:55,
+        desc:"Preimplantation genetic testing increasingly screens for polygenic risk scores (not just single-gene disorders), raising questions about where disease prevention ends and trait selection begins.",
+        source:null, sourceLabel:null },
+      { name:"Germline Enhancement Debate Intensifies", cat:1, ring:3, impact:5, confidence:30,
+        desc:"As editing tools mature, bioethics bodies and policymakers face renewed pressure to define where therapeutic gene editing ends and heritable enhancement begins — largely unresolved.",
+        source:null, sourceLabel:null },
+      { name:"Lab-Grown Organs Move Into Trials", cat:1, ring:1, impact:4, confidence:50,
+        desc:"Bioprinted and stem-cell-derived tissue constructs — including early organ structures — are entering human trials, with full transplantable organs still years away but the trajectory now clearer.",
+        source:null, sourceLabel:null },
+
+      { name:"Implanted BCIs Move to Larger Human Trials", cat:2, ring:1, impact:5, confidence:55,
+        desc:"Brain-computer interface implants for paralysis and motor restoration are expanding from single-digit case studies to larger trial cohorts, with multiple companies now in human testing.",
+        source:null, sourceLabel:null },
+      { name:"Non-Invasive BCIs Reach Consumer Devices", cat:2, ring:2, impact:3, confidence:45,
+        desc:"Headset-based EEG and emerging non-invasive interfaces are being marketed for focus tracking, gaming, and basic device control — far less capable than implants but far more scalable.",
+        source:null, sourceLabel:null },
+      { name:"Brain-to-Brain Communication Demonstrated in Labs", cat:2, ring:3, impact:3, confidence:20,
+        desc:"Lab demonstrations have shown rudimentary signal transfer between brains via computer mediation. Still a research curiosity, not a technology — but it keeps the long-term 'networked minds' idea in play.",
+        source:null, sourceLabel:null },
+      { name:"Memory Augmentation Implants in Early Trials", cat:2, ring:3, impact:4, confidence:25,
+        desc:"Early-stage implants aimed at restoring or enhancing memory function are in small human trials for clinical populations, with enhancement use in healthy people still purely speculative.",
+        source:null, sourceLabel:null },
+
+      { name:"AI Co-Pilots Become Default Cognitive Tools", cat:3, ring:0, impact:4, confidence:85,
+        desc:"AI assistants embedded in work and personal tools have become a default layer for writing, planning, and decision-making for a large share of knowledge workers — arguably the most widely adopted 'cognitive enhancement' to date.",
+        source:null, sourceLabel:null },
+      { name:"Nootropic Stacks Go Mainstream Consumer Product", cat:3, ring:1, impact:2, confidence:50,
+        desc:"Branded nootropic supplements and 'focus' products have moved from niche biohacker forums into mainstream retail, though evidence for meaningful cognitive enhancement remains mixed.",
+        source:null, sourceLabel:null },
+      { name:"Real-Time Skill Augmentation via Wearables", cat:3, ring:2, impact:3, confidence:35,
+        desc:"Smart glasses and earpieces offering real-time translation, prompts, and contextual information are framed as 'always-on' cognitive support — early but commercially active.",
+        source:null, sourceLabel:null },
+      { name:"AI-Human Hybrid Decision-Making in Knowledge Work", cat:3, ring:1, impact:4, confidence:65,
+        desc:"In fields like medicine, law, and finance, AI-assisted human judgment is becoming a documented workflow standard, with growing institutional guidance on how to combine the two.",
+        source:null, sourceLabel:null },
+
+      { name:"Digital Legacy Tools & 'Griefbots' Go Mainstream", cat:4, ring:1, impact:2, confidence:55,
+        desc:"Services that recreate a deceased person's voice, writing style, or conversational presence from their digital footprint are becoming a recognizable consumer category, raising new questions about grief, memory, and consent.",
+        source:null, sourceLabel:null },
+      { name:"Whole-Brain Emulation Research Gains Funding", cat:4, ring:3, impact:5, confidence:15,
+        desc:"A small but growing research community continues work on mapping and simulating neural connectivity at scale. Funding has increased, but a functioning whole-brain emulation remains a distant, unproven goal.",
+        source:null, sourceLabel:null },
+      { name:"Mind Uploading Remains Theoretical, Debate Sharpens", cat:4, ring:3, impact:5, confidence:10,
+        desc:"Philosophical and technical debates about whether 'uploading' a mind is even coherent — let alone achievable — have intensified alongside AI progress, but no credible technical pathway exists yet.",
+        source:null, sourceLabel:null },
+      { name:"Cryonics Sees Renewed Investment Interest", cat:4, ring:2, impact:2, confidence:25,
+        desc:"Cryopreservation organizations report renewed membership growth and investment interest, often tied to broader longevity culture, despite no scientific consensus on revival feasibility.",
+        source:null, sourceLabel:null }
+    ]
+  }
+};
 
 // ---------- Layout math ----------
 const CX = 500, CY = 500;
-const ringBounds = [55, 135, 215, 295, 375]; // 4 bands
-const sectorSize = 360 / categories.length;
+const ringBounds = [55, 135, 215, 295, 375];
 
 function polar(cx, cy, r, angleDeg){
   const a = (angleDeg - 90) * Math.PI / 180;
   return [cx + r * Math.cos(a), cy + r * Math.sin(a)];
 }
 
-// Pre-compute positions for each item
-items.forEach((item, idx) => {
-  item.id = idx;
-  const sameCategory = items.filter(i => i.cat === item.cat);
-  const posInCat = sameCategory.indexOf(item);
-  const n = sameCategory.length;
-  const sectorStart = item.cat * sectorSize;
-  const margin = sectorSize * 0.12;
-  const usable = sectorSize - margin * 2;
-  const angle = sectorStart + margin + (usable / (n - 1 || 1)) * posInCat;
-
-  const rIn = ringBounds[item.ring];
-  const rOut = ringBounds[item.ring + 1];
-  // jitter radius deterministically based on id
-  const jitter = ((item.id * 37) % 100) / 100; // 0..1
-  const r = rIn + (rOut - rIn) * (0.25 + jitter * 0.5);
-
-  const [x, y] = polar(CX, CY, r, angle);
-  item.x = x;
-  item.y = y;
-});
-
-// ---------- Build SVG ----------
-const svg = document.getElementById('radarSvg');
 const NS = "http://www.w3.org/2000/svg";
-
 const SVG_TAGS = new Set(['svg','g','circle','line','text','tspan','rect','path','polygon','polyline','ellipse']);
 
 function el(tag, attrs, text){
@@ -480,156 +658,289 @@ function el(tag, attrs, text){
   return e;
 }
 
-// Ring circles
-ringBounds.slice(1).forEach(r => {
-  svg.appendChild(el('circle', { class:'ring-circle', cx:CX, cy:CY, r:r }));
-});
+// ---------- State ----------
+let currentKey = 'transcendence';
+let current = datasets[currentKey];
+let activeCats = new Set();
+let activeRings = new Set();
+let minImpact = 0;
+let selectedId = null;
 
-// Sector lines
-categories.forEach((c, i) => {
-  const angle = i * sectorSize;
-  const [x, y] = polar(CX, CY, ringBounds[ringBounds.length-1], angle);
-  svg.appendChild(el('line', { class:'sector-line', x1:CX, y1:CY, x2:x, y2:y }));
-});
+const svg = document.getElementById('radarSvg');
+const categoryFiltersEl = document.getElementById('categoryFilters');
+const ringFiltersEl = document.getElementById('ringFilters');
+const listEl = document.getElementById('itemList');
+const detailCard = document.getElementById('detailCard');
+const impactSlider = document.getElementById('impactSlider');
+const impactVal = document.getElementById('impactVal');
 
-// Ring labels (placed along the boundary between category 0 and category 4, i.e. angle 0)
-rings.forEach((ring, i) => {
-  const rMid = (ringBounds[i] + ringBounds[i+1]) / 2;
-  const [x, y] = polar(CX, CY, rMid, 1); // just inside sector 0's start line
-  svg.appendChild(el('text', { class:'ring-label', x:x, y:y, 'text-anchor':'start' }, ring.name));
-});
+function computePositions(ds){
+  const sectorSize = 360 / ds.categories.length;
+  ds.items.forEach((item, idx) => {
+    item.id = idx;
+    const sameCategory = ds.items.filter(i => i.cat === item.cat);
+    const posInCat = sameCategory.indexOf(item);
+    const n = sameCategory.length;
+    const sectorStart = item.cat * sectorSize;
+    const margin = sectorSize * 0.12;
+    const usable = sectorSize - margin * 2;
+    const angle = sectorStart + margin + (usable / (n - 1 || 1)) * posInCat;
 
-// Category labels around the outside
-categories.forEach((c, i) => {
-  const angle = i * sectorSize + sectorSize/2;
-  const [x, y] = polar(CX, CY, ringBounds[ringBounds.length-1] + 30, angle);
-  const lines = c.name.split(' & ');
-  const text = el('text', { class:'category-label', x:x, y:y, 'text-anchor':'middle' });
-  lines.forEach((line, li) => {
-    const tspan = el('tspan', { x:x, dy: li === 0 ? 0 : 14 }, li === 1 ? '& ' + line : line);
-    text.appendChild(tspan);
-  });
-  svg.appendChild(text);
-});
+    const rIn = ringBounds[item.ring];
+    const rOut = ringBounds[item.ring + 1];
+    const jitter = ((item.id * 37) % 100) / 100;
+    const r = rIn + (rOut - rIn) * (0.25 + jitter * 0.5);
 
-// Blips
-items.forEach(item => {
-  const color = categories[item.cat].color;
-  const g = el('g', { class:'blip-group', 'data-id': item.id });
-  const circle = el('circle', {
-    class:'blip', cx:item.x, cy:item.y, r:13,
-    fill: color,
-    'data-id': item.id
-  });
-  const label = el('text', { class:'blip-num', x:item.x, y:item.y, 'data-id': item.id }, item.id + 1);
-  g.appendChild(circle);
-  g.appendChild(label);
-  svg.appendChild(g);
-});
-
-// ---------- Category filter chips ----------
-const filterContainer = document.getElementById('categoryFilters');
-const activeCats = new Set(categories.map(c => c.id));
-
-categories.forEach(c => {
-  const chip = el('div', { class:'chip', 'data-cat': c.id });
-  const dot = el('span', { class:'dot', style:`background:${c.color}` });
-  chip.appendChild(dot);
-  chip.appendChild(document.createTextNode(c.name));
-  chip.addEventListener('click', () => {
-    if(activeCats.has(c.id)){
-      activeCats.delete(c.id);
-      chip.classList.add('off');
-    } else {
-      activeCats.add(c.id);
-      chip.classList.remove('off');
-    }
-    applyFilter();
-  });
-  filterContainer.appendChild(chip);
-});
-
-function applyFilter(){
-  document.querySelectorAll('.blip').forEach(b => {
-    const id = +b.getAttribute('data-id');
-    const item = items[id];
-    b.classList.toggle('dim', !activeCats.has(item.cat));
-  });
-  document.querySelectorAll('.blip-num').forEach(t => {
-    const id = +t.getAttribute('data-id');
-    const item = items[id];
-    t.classList.toggle('dim', !activeCats.has(item.cat));
-  });
-  document.querySelectorAll('.list-item').forEach(li => {
-    const id = +li.getAttribute('data-id');
-    const item = items[id];
-    li.style.display = activeCats.has(item.cat) ? '' : 'none';
+    const [x, y] = polar(CX, CY, r, angle);
+    item.x = x;
+    item.y = y;
   });
 }
 
-// ---------- Ring legend ----------
-const ringLegendEl = document.getElementById('ringLegend');
-rings.forEach(r => {
-  const row = el('div', { class:'ring-legend-row' });
-  const num = el('div', { class:'ring-num' }, r.id + 1);
-  const text = el('div', { class:'ring-text' });
-  text.appendChild(el('b', {}, r.name));
-  text.appendChild(el('span', {}, r.desc));
-  row.appendChild(num);
-  row.appendChild(text);
-  ringLegendEl.appendChild(row);
-});
+function renderRadar(ds){
+  svg.innerHTML = '';
+  const sectorSize = 360 / ds.categories.length;
 
-// ---------- Item list ----------
-const listEl = document.getElementById('itemList');
-categories.forEach(c => {
-  const block = el('div', { class:'list-cat' });
-  const title = el('div', { class:'list-cat-title' });
-  title.appendChild(el('span', { class:'dot', style:`background:${c.color}` }));
-  title.appendChild(document.createTextNode(c.name));
-  block.appendChild(title);
-  items.filter(i => i.cat === c.id).forEach(item => {
-    const row = el('div', { class:'list-item', 'data-id': item.id });
-    row.appendChild(el('span', { class:'n' }, (item.id+1) + '.'));
-    row.appendChild(document.createTextNode(item.name));
-    row.addEventListener('click', () => selectItem(item.id));
-    block.appendChild(row);
+  ringBounds.slice(1).forEach(r => {
+    svg.appendChild(el('circle', { class:'ring-circle', cx:CX, cy:CY, r:r }));
   });
-  listEl.appendChild(block);
-});
 
-// ---------- Detail panel ----------
-const detailCard = document.getElementById('detailCard');
+  ds.categories.forEach((c, i) => {
+    const angle = i * sectorSize;
+    const [x, y] = polar(CX, CY, ringBounds[ringBounds.length-1], angle);
+    svg.appendChild(el('line', { class:'sector-line', x1:CX, y1:CY, x2:x, y2:y }));
+  });
+
+  rings.forEach((ring, i) => {
+    const rMid = (ringBounds[i] + ringBounds[i+1]) / 2;
+    const [x, y] = polar(CX, CY, rMid, 1);
+    svg.appendChild(el('text', { class:'ring-label', x:x, y:y, 'text-anchor':'start' }, ring.name));
+  });
+
+  ds.categories.forEach((c, i) => {
+    const angle = i * sectorSize + sectorSize/2;
+    const [x, y] = polar(CX, CY, ringBounds[ringBounds.length-1] + 30, angle);
+    const lines = c.name.split(' & ');
+    const text = el('text', { class:'category-label', x:x, y:y, 'text-anchor':'middle' });
+    lines.forEach((line, li) => {
+      const tspan = el('tspan', { x:x, dy: li === 0 ? 0 : 14 }, li >= 1 && lines.length > 1 ? (li === 1 ? '& ' + line : line) : line);
+      text.appendChild(tspan);
+    });
+    svg.appendChild(text);
+  });
+
+  ds.items.forEach(item => {
+    const color = palette[item.cat % palette.length];
+    const g = el('g', { class:'blip-group', 'data-id': item.id });
+    const circle = el('circle', {
+      class:'blip', cx:item.x, cy:item.y, r:13,
+      fill: color,
+      'data-id': item.id
+    });
+    const label = el('text', { class:'blip-num', x:item.x, y:item.y, 'data-id': item.id }, item.id + 1);
+    g.appendChild(circle);
+    g.appendChild(label);
+    svg.appendChild(g);
+  });
+
+  svg.querySelectorAll('.blip').forEach(b => {
+    b.addEventListener('click', () => selectItem(+b.getAttribute('data-id')));
+  });
+  svg.querySelectorAll('.blip-num').forEach(t => {
+    t.addEventListener('click', () => selectItem(+t.getAttribute('data-id')));
+  });
+}
+
+function renderCategoryFilters(ds){
+  categoryFiltersEl.innerHTML = '';
+  ds.categories.forEach(c => {
+    const color = palette[c.id % palette.length];
+    const chip = el('div', { class:'cat-chip', 'data-cat': c.id });
+    chip.appendChild(el('span', { class:'dot', style:`background:${color}; color:${color};` }));
+    chip.appendChild(document.createTextNode(c.name));
+    chip.addEventListener('click', () => {
+      if(activeCats.has(c.id)){
+        activeCats.delete(c.id);
+        chip.classList.add('off');
+      } else {
+        activeCats.add(c.id);
+        chip.classList.remove('off');
+      }
+      applyFilter();
+    });
+    categoryFiltersEl.appendChild(chip);
+  });
+}
+
+function renderRingFilters(){
+  ringFiltersEl.innerHTML = '';
+  rings.forEach(r => {
+    const pill = el('div', { class:'pill', 'data-ring': r.id });
+    pill.appendChild(el('span', { class:'ring-num' }, r.id + 1));
+    pill.appendChild(document.createTextNode(r.name));
+    pill.addEventListener('click', () => {
+      if(activeRings.has(r.id)){
+        activeRings.delete(r.id);
+        pill.classList.add('off');
+      } else {
+        activeRings.add(r.id);
+        pill.classList.remove('off');
+      }
+      applyFilter();
+    });
+    ringFiltersEl.appendChild(pill);
+  });
+}
+
+function renderList(ds){
+  listEl.innerHTML = '';
+  ds.categories.forEach(c => {
+    const color = palette[c.id % palette.length];
+    const block = el('div', { class:'list-cat' });
+    const title = el('div', { class:'list-cat-title' });
+    title.appendChild(el('span', { class:'dot', style:`background:${color}` }));
+    title.appendChild(document.createTextNode(c.name));
+    block.appendChild(title);
+    ds.items.filter(i => i.cat === c.id).forEach(item => {
+      const row = el('div', { class:'list-item', 'data-id': item.id });
+      row.appendChild(el('span', { class:'n' }, (item.id+1) + '.'));
+      row.appendChild(document.createTextNode(item.name));
+      row.addEventListener('click', () => selectItem(item.id));
+      block.appendChild(row);
+    });
+    listEl.appendChild(block);
+  });
+}
+
+function applyFilter(){
+  svg.querySelectorAll('.blip').forEach(b => {
+    const id = +b.getAttribute('data-id');
+    const item = current.items[id];
+    const visible = activeCats.has(item.cat) && activeRings.has(item.ring) && item.impact >= minImpact;
+    b.classList.toggle('dim', !visible);
+  });
+  svg.querySelectorAll('.blip-num').forEach(t => {
+    const id = +t.getAttribute('data-id');
+    const item = current.items[id];
+    const visible = activeCats.has(item.cat) && activeRings.has(item.ring) && item.impact >= minImpact;
+    t.classList.toggle('dim', !visible);
+  });
+  listEl.querySelectorAll('.list-item').forEach(li => {
+    const id = +li.getAttribute('data-id');
+    const item = current.items[id];
+    const visible = activeCats.has(item.cat) && activeRings.has(item.ring) && item.impact >= minImpact;
+    li.style.display = visible ? '' : 'none';
+  });
+}
+
+function resetDetail(){
+  selectedId = null;
+  detailCard.innerHTML = '';
+  detailCard.appendChild(el('p', { class:'placeholder' }, 'Select a point on the radar, or a signal in the list below, to see its category, time horizon, impact, and confidence.'));
+}
 
 function selectItem(id){
-  const item = items[id];
-  const cat = categories[item.cat];
+  selectedId = id;
+  const item = current.items[id];
+  const cat = current.categories[item.cat];
   const ring = rings[item.ring];
+  const color = palette[item.cat % palette.length];
 
-  document.querySelectorAll('.blip').forEach(b => b.classList.toggle('selected', +b.getAttribute('data-id') === id));
-  document.querySelectorAll('.list-item').forEach(li => li.classList.toggle('active', +li.getAttribute('data-id') === id));
+  svg.querySelectorAll('.blip').forEach(b => b.classList.toggle('selected', +b.getAttribute('data-id') === id));
+  listEl.querySelectorAll('.list-item').forEach(li => li.classList.toggle('active', +li.getAttribute('data-id') === id));
 
   detailCard.innerHTML = '';
   const badgeRow = el('div', { class:'badge-row' });
-  badgeRow.appendChild(el('span', { class:'badge', style:`background:${cat.color}` }, cat.name));
+  badgeRow.appendChild(el('span', { class:'badge', style:`background:${color}` }, cat.name));
   badgeRow.appendChild(el('span', { class:'badge ring' }, 'Ring ' + (ring.id+1) + ' · ' + ring.name));
   detailCard.appendChild(badgeRow);
   detailCard.appendChild(el('h2', {}, item.name));
-  detailCard.appendChild(el('p', {}, item.desc));
+
+  const metricRow = el('div', { class:'metric-row' });
+
+  const impactMetric = el('div', { class:'metric' });
+  impactMetric.appendChild(el('div', { class:'metric-label' }, 'Impact'));
+  const dots = el('div', { class:'impact-dots' });
+  for(let i=0;i<5;i++){
+    dots.appendChild(el('span', { class: i < item.impact ? 'on' : '' }));
+  }
+  impactMetric.appendChild(dots);
+  metricRow.appendChild(impactMetric);
+
+  const confMetric = el('div', { class:'metric' });
+  confMetric.appendChild(el('div', { class:'metric-label' }, 'Confidence'));
+  confMetric.appendChild(el('div', { class:'confidence-value' }, item.confidence + '%'));
+  metricRow.appendChild(confMetric);
+
+  detailCard.appendChild(metricRow);
+  detailCard.appendChild(el('p', { class:'desc' }, item.desc));
+
   if(item.source){
-    const link = el('a', { href: item.source, target:'_blank', rel:'noopener' }, '↗ ' + (item.sourceLabel || 'Source'));
+    const link = el('a', { class:'src', href: item.source, target:'_blank', rel:'noopener' }, '↗ ' + (item.sourceLabel || 'Source'));
     detailCard.appendChild(link);
   } else {
-    detailCard.appendChild(el('p', { style:'color:var(--ink-faint); font-size:12px; margin-top:-4px;' }, 'No single source — based on a pattern across multiple signals.'));
+    detailCard.appendChild(el('p', { class:'no-source' }, 'No single source — based on a pattern across multiple signals.'));
   }
 }
 
-document.querySelectorAll('.blip').forEach(b => {
-  b.addEventListener('click', () => selectItem(+b.getAttribute('data-id')));
+// ---------- Dataset toggle ----------
+const toggleEl = document.getElementById('datasetToggle');
+Object.keys(datasets).forEach(key => {
+  const btn = el('button', { 'data-key': key }, datasets[key].label);
+  if(key === currentKey) btn.classList.add('active');
+  btn.addEventListener('click', () => switchDataset(key));
+  toggleEl.appendChild(btn);
 });
-document.querySelectorAll('.blip-num').forEach(t => {
-  t.addEventListener('click', () => selectItem(+t.getAttribute('data-id')));
+
+function switchDataset(key){
+  if(key === currentKey) return;
+  currentKey = key;
+  current = datasets[key];
+
+  toggleEl.querySelectorAll('button').forEach(b => {
+    b.classList.toggle('active', b.getAttribute('data-key') === key);
+  });
+
+  document.getElementById('eyebrow').textContent = current.eyebrow;
+  document.getElementById('title').textContent = current.title;
+  document.getElementById('subtitle').textContent = current.subtitle;
+
+  activeCats = new Set(current.categories.map(c => c.id));
+  activeRings = new Set(rings.map(r => r.id));
+  minImpact = 0;
+  impactSlider.value = 0;
+  impactVal.textContent = '0';
+
+  computePositions(current);
+  renderRadar(current);
+  renderCategoryFilters(current);
+  renderRingFilters();
+  renderList(current);
+  resetDetail();
+  applyFilter();
+}
+
+// ---------- Impact slider ----------
+impactSlider.addEventListener('input', () => {
+  minImpact = +impactSlider.value;
+  impactVal.textContent = minImpact;
+  applyFilter();
 });
+
+// ---------- Init ----------
+document.getElementById('eyebrow').textContent = current.eyebrow;
+document.getElementById('title').textContent = current.title;
+document.getElementById('subtitle').textContent = current.subtitle;
+
+activeCats = new Set(current.categories.map(c => c.id));
+activeRings = new Set(rings.map(r => r.id));
+
+computePositions(current);
+renderRadar(current);
+renderCategoryFilters(current);
+renderRingFilters();
+renderList(current);
+resetDetail();
 </script>
 </body>
 </html>
