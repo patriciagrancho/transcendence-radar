@@ -283,6 +283,49 @@
   }
   .blip.dim{ opacity:0.1; }
   .blip-num.dim{ opacity:0.1; }
+  .item-label{
+    fill: var(--ink-soft);
+    font-family: var(--font-text);
+    font-size:10.5px;
+    font-weight:600;
+    pointer-events:none;
+    paint-order: stroke;
+    stroke: var(--bg);
+    stroke-width:3px;
+    stroke-linejoin:round;
+    transition: opacity .15s ease;
+  }
+  .item-label.dim{ opacity:0.1; }
+
+  .radar-square svg{ cursor: grab; touch-action: none; }
+  .radar-square svg.panning{ cursor: grabbing; }
+
+  .zoom-controls{
+    position:absolute;
+    bottom:14px;
+    right:14px;
+    display:flex;
+    flex-direction:column;
+    gap:6px;
+    z-index:2;
+  }
+  .zoom-controls button{
+    width:30px; height:30px;
+    border-radius:8px;
+    border:1px solid var(--line);
+    background: var(--surface);
+    color:var(--ink-soft);
+    font-size:16px;
+    font-weight:700;
+    line-height:1;
+    cursor:pointer;
+    display:flex; align-items:center; justify-content:center;
+    transition: background .12s ease, color .12s ease;
+  }
+  .zoom-controls button:hover{
+    background: var(--surface-hover);
+    color: var(--ink);
+  }
 
   /* Detail / list panel */
   .detail-block{
@@ -479,76 +522,12 @@
   .btn.primary:hover{ opacity:0.9; }
   .modal-note{ font-size:11px; color:var(--ink-faint); line-height:1.5; margin-top:12px; }
 
-  /* Outlook view */
-  .outlook-view{
-    flex:1 1 auto; min-height:0; overflow-y:auto; padding-right:6px;
-  }
-  .outlook-view::-webkit-scrollbar{ width:5px; }
-  .outlook-view::-webkit-scrollbar-thumb{ background: var(--line); border-radius:4px; }
-  .outlook-section{ margin-bottom:28px; }
-  .outlook-section:last-child{ margin-bottom:0; }
-  .outlook-section h3{
-    font-size:11px; text-transform:uppercase; letter-spacing:2px;
-    color:var(--ink-faint); font-weight:700; margin:0 0 4px 0;
-  }
-  .outlook-section .section-sub{
-    font-size:12.5px; color:var(--ink-soft); margin:0 0 16px 0; line-height:1.6; max-width:760px;
-  }
-  .domain-grid{ display:grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap:12px; }
-  .domain-card{
-    background: var(--surface); border:1px solid var(--line-soft);
-    border-radius: var(--radius-md); box-shadow: var(--shadow); padding:14px 16px;
-  }
-  .domain-card h4{
-    font-family: var(--font-serif); font-size:15px; font-weight:500; margin:0 0 8px 0; color:var(--ink);
-  }
-  .domain-card .domain-row{ margin-bottom:8px; }
-  .domain-card .domain-row:last-child{ margin-bottom:0; }
-  .domain-card .domain-tag{
-    display:block; font-size:9.5px; font-weight:700; text-transform:uppercase;
-    letter-spacing:1px; color:var(--ink-faint); margin-bottom:3px;
-  }
-  .domain-card .domain-tag.observed{ color:#5FB89A; }
-  .domain-card .domain-tag.trajectory{ color:#6FA8DC; }
-  .domain-card .domain-tag.speculative{ color:#A99BD9; }
-  .domain-card p{ font-size:12px; line-height:1.6; color:var(--ink-soft); margin:0; }
-
-  .goals-grid{ display:grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap:10px; }
-  .goal-card{
-    background: var(--surface); border:1px solid var(--line-soft);
-    border-radius: var(--radius-md); box-shadow: var(--shadow); padding:12px 14px;
-  }
-  .goal-card h5{ font-size:13px; font-weight:600; margin:0 0 4px 0; color:var(--ink); }
-  .goal-card p{ font-size:11.5px; line-height:1.55; color:var(--ink-soft); margin:0; }
-
-  .scenario-grid{ display:grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap:12px; }
-  .scenario-card{
-    background: var(--surface); border:1px solid var(--line-soft);
-    border-radius: var(--radius-md); box-shadow: var(--shadow); padding:14px 16px;
-    border-top:3px solid var(--line);
-  }
-  .scenario-card.best{ border-top-color:#5FB89A; }
-  .scenario-card.base{ border-top-color:#6FA8DC; }
-  .scenario-card.worst{ border-top-color:#E08B7D; }
-  .scenario-card.wildcard{ border-top-color:#A99BD9; }
-  .scenario-card .scenario-tag{
-    font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:1.5px;
-    color:var(--ink-faint); margin-bottom:4px;
-  }
-  .scenario-card h4{ font-family: var(--font-serif); font-size:15px; font-weight:500; margin:0 0 8px 0; color:var(--ink); }
-  .scenario-card p{ font-size:12px; line-height:1.6; color:var(--ink-soft); margin:0; }
-
-  .speculation-note{
-    font-size:11px; color:var(--ink-faint); line-height:1.6; margin-top:6px;
-    border-top:1px solid var(--line-soft); padding-top:14px;
-  }
 
   @media (max-width: 980px){
     body{ height:auto; overflow:auto; }
     .stage{ grid-template-columns: 1fr; }
     .radar-wrap{ min-height:480px; }
     .panel{ max-height:none; }
-    .outlook-view{ overflow-y:visible; }
   }
 </style>
 </head>
@@ -586,6 +565,11 @@
       <div class="radar-square">
         <svg viewBox="0 0 1000 1000" id="radarSvg"></svg>
       </div>
+      <div class="zoom-controls">
+        <button id="zoomInBtn" title="Zoom in">+</button>
+        <button id="zoomOutBtn" title="Zoom out">−</button>
+        <button id="zoomResetBtn" title="Reset view">⤾</button>
+      </div>
     </div>
 
     <div class="panel" id="rightPanel" style="overflow:visible;">
@@ -598,8 +582,6 @@
       </div>
     </div>
   </div>
-
-  <div class="outlook-view" id="outlookView" style="display:none;"></div>
 
   <button class="fab" id="suggestBtn" title="Suggest a new trend">+</button>
 
@@ -661,7 +643,7 @@
   </div>
 
 <script>
-const palette = ["#5FB89A","#E08B7D","#A99BD9","#6FA8DC","#D9B35C"];
+const palette = ["#6FA8DC","#E08B7D","#D9B35C","#5FB89A","#A99BD9","#D97FB0"];
 
 const rings = [
   { id:0, name:"Near", range:"0–5 yrs", desc:"Already happening, or close to it." },
@@ -677,17 +659,18 @@ const datasets = {
     title: "Transcendence Radar",
     subtitle: "Where ideas about meditation, spirituality, psychedelics, and the mind are headed next. The closer to the center, the sooner it's likely to go mainstream. Click any point for details.",
     categories: [
-      { id:0, name:"Inner Technologies & Practice" },
-      { id:1, name:"Psychedelic & Plant Medicine Renaissance" },
-      { id:2, name:"Consciousness Science & Post-Materialism" },
-      { id:3, name:"Tech & Transcendence" },
-      { id:4, name:"Collective & Planetary Consciousness" }
+      { id:0, name:"Technology" },
+      { id:1, name:"Society" },
+      { id:2, name:"Economy" },
+      { id:3, name:"Environment" },
+      { id:4, name:"Politics" },
+      { id:5, name:"Science" }
     ],
     items: [
-      { name:"Meditation App Boom", cat:0, ring:1, impact:3, confidence:80,
+      { name:"Meditation App Boom", cat:2, ring:1, impact:3, confidence:80,
         desc:"Meditation and mindfulness apps now lead the digital wellness market, with AI-driven personalization becoming the default. Digital and app-based platforms are projected to hold roughly a third of the meditation market in 2026.",
         source:"https://www.thebusinessresearchcompany.com/report/meditation-global-market-report", sourceLabel:"Meditation Global Market Report, 2026" },
-      { name:"Breathwork & Sound Healing Go Mainstream", cat:0, ring:1, impact:2, confidence:75,
+      { name:"Breathwork & Sound Healing Go Mainstream", cat:1, ring:1, impact:2, confidence:75,
         desc:"Breathwork, sound baths, and somatic practices have moved from festival fringe into spas, corporate wellness programs, and mainstream retreat centers — part of a broader 2026 wellness trend toward embodied, sensory practice.",
         source:"https://all.accor.com/a/en/limitless/thematics/wellness/wellness-trends-2026.html", sourceLabel:"Wellness Trends 2026, Accor Limitless" },
       { name:"Neuro-Meditation Devices", cat:0, ring:2, impact:3, confidence:45,
@@ -696,74 +679,74 @@ const datasets = {
       { name:"AI-Personalized Contemplative Sessions", cat:0, ring:2, impact:3, confidence:50,
         desc:"Algorithms now build meditation sessions in real time from biometric and mood data. A 2025 Stanford report found a 22% steeper drop in default-mode-network activity for dynamically generated sessions versus static recordings — a real physiological signal, though what it means for depth of practice is unresolved.",
         source:"https://www.tsimtsoum.com/2026/04/how-ai-meditation-apps-blend-ancient.html", sourceLabel:"How AI Meditation Apps Blend Ancient Wisdom With Modern Science" },
-      { name:"Digital Sanghas & Online Dharma", cat:0, ring:2, impact:2, confidence:60,
+      { name:"Digital Sanghas & Online Dharma", cat:1, ring:2, impact:2, confidence:60,
         desc:"Online practice communities such as Treeleaf Zendo are normalizing remote sangha. The open question is whether virtual community can carry the relational depth — accountability, transmission, friction — that in-person sangha provides.",
         source:"https://www.engagedbuddhists.ai/field-framework", sourceLabel:"Buddhism & AI Initiative — Field Framework" },
 
-      { name:"State-Licensed Psilocybin Therapy", cat:1, ring:0, impact:5, confidence:85,
+      { name:"State-Licensed Psilocybin Therapy", cat:4, ring:0, impact:5, confidence:85,
         desc:"Oregon and Colorado now run fully licensed psilocybin therapy programs. New Mexico has signed a medical psilocybin law (live by December 2026) and New Jersey signed a hospital-based pilot program in January 2026 with $6M in funding. This has crossed from advocacy into operating infrastructure.",
         source:"https://psychedelicbeacon.com/blog/psilocybin-therapy-legal-states-2026", sourceLabel:"Psilocybin Therapy Legal States, 2026" },
-      { name:"FDA Review of Psilocybin Therapy (COMP360)", cat:1, ring:1, impact:5, confidence:65,
+      { name:"FDA Review of Psilocybin Therapy (COMP360)", cat:4, ring:1, impact:5, confidence:65,
         desc:"COMPASS Pathways has completed two Phase 3 trials for its psilocybin therapy COMP360. FDA approval — which would make it the first classic psychedelic available as a prescription medicine — is plausible by late 2026 or early 2027.",
         source:"https://www.mcguirewoods.com/client-resources/alerts/2026/5/executive-and-doj-orders-accelerate-support-for-psychedelic-therapies-and-medical-marijuana/", sourceLabel:"McGuireWoods, May 2026" },
-      { name:"Federal Policy Shift on Psychedelics", cat:1, ring:1, impact:4, confidence:70,
+      { name:"Federal Policy Shift on Psychedelics", cat:4, ring:1, impact:4, confidence:70,
         desc:"An April 2026 executive order is accelerating federal support for psychedelic research and approvals. More than 26 states introduced psychedelic reform legislation across the 2025–26 sessions — momentum is now bipartisan and broad-based, not a coastal niche.",
         source:"https://www.mcguirewoods.com/client-resources/alerts/2026/5/executive-and-doj-orders-accelerate-support-for-psychedelic-therapies-and-medical-marijuana/", sourceLabel:"McGuireWoods, May 2026" },
       { name:"Psychedelic Churches & Legal Ceremony", cat:1, ring:2, impact:3, confidence:40,
         desc:"Religious and ceremonial use of plant medicines (ayahuasca, peyote, psilocybin) is gaining limited legal protection alongside the medical track. This raises a real access question: who gets a sanctioned spiritual path to these experiences, and on what terms.",
         source:null, sourceLabel:null },
-      { name:"Psychedelics & Lasting Worldview Shifts", cat:1, ring:2, impact:4, confidence:55,
+      { name:"Psychedelics & Lasting Worldview Shifts", cat:5, ring:2, impact:4, confidence:55,
         desc:"Studies show psychedelic use correlates with durable shifts away from materialist views and toward panpsychist or non-dual framings — changes that held for at least six months and were linked to improved mental health outcomes. This is the empirical bridge between 'drug effect' and 'changed metaphysics.'",
         source:"https://www.nature.com/articles/s41598-021-01209-2", sourceLabel:"Scientific Reports — Psychedelics alter metaphysical beliefs" },
 
-      { name:"Transpersonal Psychology Re-enters the Mainstream", cat:2, ring:1, impact:3, confidence:55,
+      { name:"Transpersonal Psychology Re-enters the Mainstream", cat:5, ring:1, impact:3, confidence:55,
         desc:"Transpersonal and contemplative psychology — long sidelined by mainstream clinical psychology — are reappearing in mainstream journals, reintroducing the dimension of spiritual and self-transcendent experience that strictly materialist models left out.",
         source:"https://cswr.hds.harvard.edu/research-programming/transcendence-transformation/psychedelics-spirituality", sourceLabel:"Harvard CSWR — Psychedelics & Spirituality" },
-      { name:"Panpsychism as a Live Research Question", cat:2, ring:2, impact:3, confidence:35,
+      { name:"Panpsychism as a Live Research Question", cat:5, ring:2, impact:3, confidence:35,
         desc:"Beyond therapy outcomes, researchers are now studying how psychedelics change people's metaphysical beliefs — about consciousness, the self, and what counts as 'real' — as a field of inquiry in its own right, not just a side effect to footnote.",
         source:"https://www.essentiafoundation.org/psychedelics-the-self-and-the-collapse-of-materialist-assumptions/reading/", sourceLabel:"Essentia Foundation — Psychedelics, the self, and materialist assumptions" },
-      { name:"Near-Death Experience Research Continues", cat:2, ring:2, impact:2, confidence:45,
+      { name:"Near-Death Experience Research Continues", cat:5, ring:2, impact:2, confidence:45,
         desc:"Roughly two-thirds of near-death experiencers report mystical experiences during their brush with death, versus none of matched comparison survivors. NDE research has run continuously for decades, mostly at the margins of neuroscience, but the data keeps accumulating.",
         source:"https://med.virginia.edu/perceptual-studies/wp-content/uploads/sites/360/2017/01/NDE65.pdf", sourceLabel:"UVA Division of Perceptual Studies — Cosmological implications of NDEs" },
-      { name:"\"Consciousness as Foundational\" Theories", cat:2, ring:3, impact:4, confidence:20,
+      { name:"\"Consciousness as Foundational\" Theories", cat:5, ring:3, impact:4, confidence:20,
         desc:"A growing minority of philosophers and scientists argue consciousness is foundational rather than emergent — that mind isn't produced by matter but is closer to the ground matter arises from. Still a minority position, but now appearing in peer-reviewed psychology journals rather than only philosophy of mind.",
         source:"https://www.frontiersin.org/journals/psychology/articles/10.3389/fpsyg.2025.1659944/full", sourceLabel:"Frontiers in Psychology, 2025" },
-      { name:"Psi Research, Quietly Continued", cat:2, ring:3, impact:2, confidence:15,
+      { name:"Psi Research, Quietly Continued", cat:5, ring:3, impact:2, confidence:15,
         desc:"Parapsychology research continues in specialized journals, with occasional crossover into mainstream psychology and neuroscience outlets. Mainstream science remains skeptical, but researchers in the field report attitudes closer to skeptics than to lay believers — a more careful picture than 'fringe believers vs. science.'",
         source:"https://www.ncbi.nlm.nih.gov/pmc/articles/PMC11212013/", sourceLabel:"Cognitive styles and psi — PMC" },
 
-      { name:"AI as the Default Practice Interface", cat:3, ring:1, impact:3, confidence:65,
+      { name:"AI as the Default Practice Interface", cat:0, ring:1, impact:3, confidence:65,
         desc:"AI is becoming the default interface for personal practice — adjusting pacing, music, and guidance to your physiology in real time. The open question is whether this deepens practice or mainly makes it more frictionless and consumable.",
         source:"https://getstillmind.com/blog/meditation-statistics-2026/", sourceLabel:"Meditation statistics, 2026" },
-      { name:"First AI Ordained in a Buddhist Lineage", cat:3, ring:2, impact:2, confidence:40,
+      { name:"First AI Ordained in a Buddhist Lineage", cat:0, ring:2, impact:2, confidence:40,
         desc:"Emi Jido, reportedly the first AI formally ordained within a Buddhist tradition, is a concrete signal that religious institutions are actively working out AI's role in practice and community — not only debating its risks from the outside.",
         source:"https://www.engagedbuddhists.ai/field-framework", sourceLabel:"Buddhism & AI Initiative" },
-      { name:"Buddhist-Informed AI Ethics Frameworks", cat:3, ring:3, impact:3, confidence:30,
+      { name:"Buddhist-Informed AI Ethics Frameworks", cat:0, ring:3, impact:3, confidence:30,
         desc:"Buddhist teachers and AI researchers are jointly developing ethics frameworks for AI grounded in concepts like non-harm and interdependence, as an alternative or complement to purely Western ethical frameworks for AI governance.",
         source:"https://www.engagedbuddhists.ai/field-framework", sourceLabel:"Buddhism & AI Initiative — Field Framework" },
-      { name:"The Digital Wellness Loneliness Paradox", cat:3, ring:2, impact:3, confidence:55,
+      { name:"The Digital Wellness Loneliness Paradox", cat:1, ring:2, impact:3, confidence:55,
         desc:"A 2026 Global Digital Wellness Index found that heavy users of meditation and wellness apps still report high baseline loneliness — early evidence that simulated guidance doesn't substitute for embodied community, and a likely driver of renewed demand for in-person practice.",
         source:"https://getstillmind.com/blog/meditation-statistics-2026/", sourceLabel:"Meditation statistics, 2026" },
-      { name:"VR & Immersive Tech for Altered States", cat:3, ring:3, impact:3, confidence:25,
+      { name:"VR & Immersive Tech for Altered States", cat:0, ring:3, impact:3, confidence:25,
         desc:"Immersive and VR experiences designed to induce altered or transcendent states are an early-stage category — more speculative than neuro-meditation devices, but following the same underlying logic of engineering inner experience from the outside in.",
         source:null, sourceLabel:null },
 
-      { name:"Spiritual Ecology Goes Beyond Niche Retreats", cat:4, ring:1, impact:3, confidence:55,
+      { name:"Spiritual Ecology Goes Beyond Niche Retreats", cat:3, ring:1, impact:3, confidence:55,
         desc:"Spiritual ecology — framing the ecological crisis partly as a crisis of disconnection from the sacred — is moving from small retreats into broader environmental, academic, and even policy-adjacent conversation.",
         source:"https://workingwithoneness.org/articles/oneness-spiritual-ecology/", sourceLabel:"Working With Oneness — Spiritual Ecology" },
-      { name:"Indigenous Wisdom in Climate & Policy Discourse", cat:4, ring:1, impact:3, confidence:60,
+      { name:"Indigenous Wisdom in Climate & Policy Discourse", cat:3, ring:1, impact:3, confidence:60,
         desc:"Indigenous cosmologies and land relationships are increasingly cited in climate and biodiversity discourse, with animist and relational worldviews offered as alternatives to purely extractive framings of nature.",
         source:"https://accidentalgods.life/healing-our-fractured-world-re-awakening-indigenous-consciousness-with-marc-john-brown-of-the-native-wisdom-hub/", sourceLabel:"Accidental Gods — Re-Awakening Indigenous Consciousness" },
-      { name:"Interspirituality Gets Institutional Homes", cat:4, ring:2, impact:2, confidence:50,
+      { name:"Interspirituality Gets Institutional Homes", cat:1, ring:2, impact:2, confidence:50,
         desc:"Events like Harvard Divinity School's 'Psychedelic Intersections' (its fourth edition, held April 10–11, 2026) bring contemplative traditions, science, and psychedelic research into the same room — a sign interspiritual dialogue now has institutional backing, not just festival energy.",
         source:"https://cswr.hds.harvard.edu/research-programming/transcendence-transformation/psychedelics-spirituality", sourceLabel:"Harvard CSWR — Psychedelics & Spirituality" },
-      { name:"The \"2026 Awakening\" Cultural Narrative", cat:4, ring:3, impact:2, confidence:30,
+      { name:"The \"2026 Awakening\" Cultural Narrative", cat:1, ring:3, impact:2, confidence:30,
         desc:"Astrologers and spiritual commentators have framed 2026 as a year of 'collective awakening.' Whatever its astrological basis, the narrative itself is a cultural signal worth tracking — it shapes how people interpret personal and collective change as it happens.",
         source:"https://holisticmedicinedevice.com/the-wave-of-consciousness-awakening-in-2026-astrological-cycles-origins-and-predictions/", sourceLabel:"\"Wave of Consciousness Awakening in 2026\"" },
-      { name:"The \"Great Awakening Map\"", cat:4, ring:2, impact:2, confidence:45,
+      { name:"The \"Great Awakening Map\"", cat:1, ring:2, impact:2, confidence:45,
         desc:"A sprawling, fast-spreading meme-map (sold as posters and printables) that visually links consciousness and meditation with ancient civilizations, 'suppressed' technology, hidden history, and disclosure narratives in one chart. It's less a single claim than a genre — a popular template for picturing humanity on the edge of a collective awakening, blending real contemplative content with conspiracy-adjacent framing. Worth tracking because it shows 'awakening' language spreading through internet culture, well outside any spiritual institution.",
         source:"https://www.etsy.com/listing/4468541336/great-awakening-map-2026-printable", sourceLabel:"Example: \"Great Awakening Map 2026\" printable, Etsy" },
-      { name:"Post-Growth Spirituality", cat:4, ring:3, impact:3, confidence:25,
+      { name:"Post-Growth Spirituality", cat:2, ring:3, impact:3, confidence:25,
         desc:"Degrowth and post-growth economics are starting to pick up spiritual and contemplative framing — questioning not just GDP as a metric, but the achievement-oriented self that GDP-thinking assumes. Still mostly in essays and small conferences, not policy.",
         source:null, sourceLabel:null },
 
@@ -775,7 +758,7 @@ const datasets = {
           "2026 defense authorization language requiring the Pentagon to brief Congress on UAP incidents on a set schedule",
           "AARO (All-domain Anomaly Resolution Office) periodic public reports and case reviews"
         ] },
-      { name:"\"Lost History\" and Ancient Civilization Theories Go Mainstream", cat:4, ring:1, impact:2, confidence:55,
+      { name:"\"Lost History\" and Ancient Civilization Theories Go Mainstream", cat:1, ring:1, impact:2, confidence:55,
         desc:"Documentaries and bestsellers arguing that ancient civilizations were more advanced than mainstream archaeology admits (Atlantis, Göbekli Tepe, lost cities) keep finding huge audiences. It's part entertainment, part a broader hunger for stories that put 'forgotten knowledge' at the center of where humanity is headed.",
         source:null, sourceLabel:null,
         examples:[
@@ -783,7 +766,7 @@ const datasets = {
           "Recurring bestseller-list books revisiting sites like Göbekli Tepe with pre-mainstream-timeline framing",
           "Long-running YouTube and podcast channels dedicated to alternative archaeology, with millions of subscribers combined"
         ] },
-      { name:"Manifestation and \"Law of Attraction\" Content Floods Social Media", cat:4, ring:0, impact:2, confidence:70,
+      { name:"Manifestation and \"Law of Attraction\" Content Floods Social Media", cat:1, ring:0, impact:2, confidence:70,
         desc:"Videos about manifesting money, relationships, and 'your reality' are some of the most-watched spiritual content online. It's a simplified, internet-native version of older mind-over-matter ideas — and it's already mainstream, not emerging.",
         source:null, sourceLabel:null,
         examples:[
@@ -791,7 +774,7 @@ const datasets = {
           "\"Reality shifting\" communities with their own subreddits, Discords, and shared vocabulary",
           "Manifestation journals and planners now sold as mainstream stationery and self-help products"
         ] },
-      { name:"\"Starseed\" and Indigo Identity Communities Grow Online", cat:4, ring:2, impact:1, confidence:30,
+      { name:"\"Starseed\" and Indigo Identity Communities Grow Online", cat:1, ring:2, impact:1, confidence:30,
         desc:"Online communities built around the idea that some people are 'old souls' from other worlds or timelines (starseeds, indigo children) keep finding new audiences, especially among younger users on TikTok and Discord. A niche identity trend, but a steady one.",
         source:null, sourceLabel:null,
         examples:[
@@ -799,7 +782,7 @@ const datasets = {
           "TikTok creators with large followings posting starseed identity and 'awakening symptom' content",
           "Astrology apps adding 'soul origin' or 'star family' features alongside standard chart readings"
         ] },
-      { name:"\"Suppressed Technology\" Claims Keep Recirculating Online", cat:3, ring:3, impact:1, confidence:15,
+      { name:"\"Suppressed Technology\" Claims Keep Recirculating Online", cat:0, ring:3, impact:1, confidence:15,
         desc:"Claims that free-energy devices or other breakthrough technologies were buried by governments or corporations are a recurring theme in meme-maps and awakening content. There's no credible evidence for the specific claims, but the story keeps resurfacing — a long-running cultural pattern more than a near-term trend.",
         source:null, sourceLabel:null,
         examples:[
@@ -816,141 +799,80 @@ const datasets = {
     title: "Transhumanism Radar",
     subtitle: "Where technology for upgrading the body and brain is headed next — anti-aging drugs, gene editing, brain implants, and AI tools. The closer to the center, the sooner it's likely to go mainstream.",
     categories: [
-      { id:0, name:"Longevity & Anti-Aging" },
-      { id:1, name:"Genetic & Biological Engineering" },
-      { id:2, name:"Neurotechnology & Brain-Computer Interfaces" },
-      { id:3, name:"AI Augmentation & Cognitive Enhancement" },
-      { id:4, name:"Digital Minds & Mind Uploading" }
+      { id:0, name:"Technology" },
+      { id:1, name:"Society" },
+      { id:2, name:"Economy" },
+      { id:3, name:"Environment" },
+      { id:4, name:"Politics" },
+      { id:5, name:"Science" }
     ],
     items: [
-      { name:"Longevity Drugs Enter Clinical Mainstream", cat:0, ring:0, impact:4, confidence:75,
+      { name:"Longevity Drugs Enter Clinical Mainstream", cat:5, ring:0, impact:4, confidence:75,
         desc:"Rapamycin, metformin, and related longevity compounds are moving from off-label biohacker use into structured clinical trials and early prescriptions for aging-related decline, with several large trials reporting results through 2026.",
         source:null, sourceLabel:null },
-      { name:"Senolytics Reach Early Clinical Pipelines", cat:0, ring:1, impact:3, confidence:60,
+      { name:"Senolytics Reach Early Clinical Pipelines", cat:5, ring:1, impact:3, confidence:60,
         desc:"Drugs designed to clear senescent ('zombie') cells are advancing through Phase 1/2 trials for age-related conditions, building on years of preclinical work in cellular senescence.",
         source:null, sourceLabel:null },
       { name:"Continuous Biological Age Tracking", cat:0, ring:0, impact:3, confidence:70,
         desc:"Consumer wearables and blood-panel services now estimate 'biological age' alongside chronological age, turning aging itself into a trackable, optimizable metric for a growing wellness-tech market.",
         source:null, sourceLabel:null },
-      { name:"Young Plasma & Blood-Based Therapies Marketed", cat:0, ring:2, impact:2, confidence:35,
+      { name:"Young Plasma & Blood-Based Therapies Marketed", cat:2, ring:2, impact:2, confidence:35,
         desc:"Plasma dilution and young-donor blood treatments are marketed as anti-aging interventions despite thin clinical evidence, illustrating the gap between hype and validated longevity science.",
         source:null, sourceLabel:null },
 
-      { name:"CRISPR Therapies Reach Patients for Rare Diseases", cat:1, ring:0, impact:5, confidence:85,
+      { name:"CRISPR Therapies Reach Patients for Rare Diseases", cat:5, ring:0, impact:5, confidence:85,
         desc:"Approved CRISPR-based gene therapies for conditions like sickle cell disease are now being administered to patients, marking gene editing's transition from lab tool to standard-of-care treatment.",
         source:null, sourceLabel:null },
-      { name:"Embryo Screening for Polygenic Traits Expands", cat:1, ring:1, impact:4, confidence:55,
+      { name:"Embryo Screening for Polygenic Traits Expands", cat:4, ring:1, impact:4, confidence:55,
         desc:"Preimplantation genetic testing increasingly screens for polygenic risk scores (not just single-gene disorders), raising questions about where disease prevention ends and trait selection begins.",
         source:null, sourceLabel:null },
-      { name:"Germline Enhancement Debate Intensifies", cat:1, ring:3, impact:5, confidence:30,
+      { name:"Germline Enhancement Debate Intensifies", cat:4, ring:3, impact:5, confidence:30,
         desc:"As editing tools mature, bioethics bodies and policymakers face renewed pressure to define where therapeutic gene editing ends and heritable enhancement begins — largely unresolved.",
         source:null, sourceLabel:null },
-      { name:"Lab-Grown Organs Move Into Trials", cat:1, ring:1, impact:4, confidence:50,
+      { name:"Lab-Grown Organs Move Into Trials", cat:5, ring:1, impact:4, confidence:50,
         desc:"Bioprinted and stem-cell-derived tissue constructs — including early organ structures — are entering human trials, with full transplantable organs still years away but the trajectory now clearer.",
         source:null, sourceLabel:null },
 
-      { name:"Implanted BCIs Move to Larger Human Trials", cat:2, ring:1, impact:5, confidence:55,
+      { name:"Implanted BCIs Move to Larger Human Trials", cat:0, ring:1, impact:5, confidence:55,
         desc:"Brain-computer interface implants for paralysis and motor restoration are expanding from single-digit case studies to larger trial cohorts, with multiple companies now in human testing.",
         source:null, sourceLabel:null },
-      { name:"Non-Invasive BCIs Reach Consumer Devices", cat:2, ring:2, impact:3, confidence:45,
+      { name:"Non-Invasive BCIs Reach Consumer Devices", cat:0, ring:2, impact:3, confidence:45,
         desc:"Headset-based EEG and emerging non-invasive interfaces are being marketed for focus tracking, gaming, and basic device control — far less capable than implants but far more scalable.",
         source:null, sourceLabel:null },
-      { name:"Brain-to-Brain Communication Demonstrated in Labs", cat:2, ring:3, impact:3, confidence:20,
+      { name:"Brain-to-Brain Communication Demonstrated in Labs", cat:5, ring:3, impact:3, confidence:20,
         desc:"Lab demonstrations have shown rudimentary signal transfer between brains via computer mediation. Still a research curiosity, not a technology — but it keeps the long-term 'networked minds' idea in play.",
         source:null, sourceLabel:null },
-      { name:"Memory Augmentation Implants in Early Trials", cat:2, ring:3, impact:4, confidence:25,
+      { name:"Memory Augmentation Implants in Early Trials", cat:5, ring:3, impact:4, confidence:25,
         desc:"Early-stage implants aimed at restoring or enhancing memory function are in small human trials for clinical populations, with enhancement use in healthy people still purely speculative.",
         source:null, sourceLabel:null },
 
-      { name:"AI Co-Pilots Become Default Cognitive Tools", cat:3, ring:0, impact:4, confidence:85,
+      { name:"AI Co-Pilots Become Default Cognitive Tools", cat:0, ring:0, impact:4, confidence:85,
         desc:"AI assistants embedded in work and personal tools have become a default layer for writing, planning, and decision-making for a large share of knowledge workers — arguably the most widely adopted 'cognitive enhancement' to date.",
         source:null, sourceLabel:null },
-      { name:"Nootropic Stacks Go Mainstream Consumer Product", cat:3, ring:1, impact:2, confidence:50,
+      { name:"Nootropic Stacks Go Mainstream Consumer Product", cat:2, ring:1, impact:2, confidence:50,
         desc:"Branded nootropic supplements and 'focus' products have moved from niche biohacker forums into mainstream retail, though evidence for meaningful cognitive enhancement remains mixed.",
         source:null, sourceLabel:null },
-      { name:"Real-Time Skill Augmentation via Wearables", cat:3, ring:2, impact:3, confidence:35,
+      { name:"Real-Time Skill Augmentation via Wearables", cat:0, ring:2, impact:3, confidence:35,
         desc:"Smart glasses and earpieces offering real-time translation, prompts, and contextual information are framed as 'always-on' cognitive support — early but commercially active.",
         source:null, sourceLabel:null },
-      { name:"AI-Human Hybrid Decision-Making in Knowledge Work", cat:3, ring:1, impact:4, confidence:65,
+      { name:"AI-Human Hybrid Decision-Making in Knowledge Work", cat:1, ring:1, impact:4, confidence:65,
         desc:"In fields like medicine, law, and finance, AI-assisted human judgment is becoming a documented workflow standard, with growing institutional guidance on how to combine the two.",
         source:null, sourceLabel:null },
 
-      { name:"Digital Legacy Tools & 'Griefbots' Go Mainstream", cat:4, ring:1, impact:2, confidence:55,
+      { name:"Digital Legacy Tools & 'Griefbots' Go Mainstream", cat:1, ring:1, impact:2, confidence:55,
         desc:"Services that recreate a deceased person's voice, writing style, or conversational presence from their digital footprint are becoming a recognizable consumer category, raising new questions about grief, memory, and consent.",
         source:null, sourceLabel:null },
-      { name:"Whole-Brain Emulation Research Gains Funding", cat:4, ring:3, impact:5, confidence:15,
+      { name:"Whole-Brain Emulation Research Gains Funding", cat:5, ring:3, impact:5, confidence:15,
         desc:"A small but growing research community continues work on mapping and simulating neural connectivity at scale. Funding has increased, but a functioning whole-brain emulation remains a distant, unproven goal.",
         source:null, sourceLabel:null },
-      { name:"Mind Uploading Remains Theoretical, Debate Sharpens", cat:4, ring:3, impact:5, confidence:10,
+      { name:"Mind Uploading Remains Theoretical, Debate Sharpens", cat:1, ring:3, impact:5, confidence:10,
         desc:"Philosophical and technical debates about whether 'uploading' a mind is even coherent — let alone achievable — have intensified alongside AI progress, but no credible technical pathway exists yet.",
         source:null, sourceLabel:null },
-      { name:"Cryonics Sees Renewed Investment Interest", cat:4, ring:2, impact:2, confidence:25,
+      { name:"Cryonics Sees Renewed Investment Interest", cat:2, ring:2, impact:2, confidence:25,
         desc:"Cryopreservation organizations report renewed membership growth and investment interest, often tied to broader longevity culture, despite no scientific consensus on revival feasibility.",
         source:null, sourceLabel:null }
     ]
   }
-};
-
-const outlook = {
-  label: "Outlook",
-  eyebrow: "Outlook · Speculative, Not News",
-  title: "Where Spirituality Is Headed",
-  subtitle: "A longer-range, exploratory look at how shifts in meditation, psychedelics, and consciousness research could ripple into daily life — and where it could go wrong. This isn't a news feed: it mixes what's observable today with reasoned speculation about what comes next, and labels which is which.",
-  domains: [
-    { name:"Education", framing:"How meaning is taught",
-      observed:"Mindfulness and social-emotional learning are now standard in many school curricula, and a growing number of universities run contemplative studies programs and meditation spaces.",
-      trajectory:"Attention and emotional-regulation training move further into core curriculum rather than staying an add-on. AI tutors start adjusting not just to what a student knows, but to their emotional state.",
-      speculative:"Schools could eventually track something like a student's sense of coherence or connectedness alongside literacy and math — treating meaning-making as a skill to develop. Speculative, and it raises a real question: who gets to define 'coherence'?" },
-    { name:"Work", framing:"Purpose vs. productivity",
-      observed:"\"Purpose\" and \"meaning at work\" are now standard language in corporate wellness and HR, even if what's behind the words varies a lot.",
-      trajectory:"As AI takes over more routine cognitive work, a job's value shifts toward judgment, care, and craft. Employers have to answer what people are actually for, not just what they produce.",
-      speculative:"Work could shift toward roles built around contribution and care rather than output, with income partly decoupled from labor through some form of guaranteed income. Speculative and politically contested — one possible direction, not a prediction." },
-    { name:"Governance", framing:"Values in policy",
-      observed:"Indigenous and ecological worldviews already show up in some land-rights and environmental policy. Psychedelic policy reform is a live legislative topic in dozens of U.S. states.",
-      trajectory:"More policy debates explicitly weigh collective wellbeing and intergenerational responsibility, not just growth and GDP.",
-      speculative:"Some governments could adopt formal wellbeing or \"flourishing\" metrics alongside economic ones, and build basic contemplative or ethics training into how public officials are trained. Still speculative — and easy to imagine being watered down or co-opted." },
-    { name:"Healthcare", framing:"Mental + spiritual health integration",
-      observed:"Psychedelic-assisted therapy is moving into licensed clinical settings. Spiritual care — chaplaincy — is already a recognized role in many hospitals.",
-      trajectory:"Existential and spiritual distress gets treated as a clinical category in more settings, especially palliative care, and insurance starts covering some of it.",
-      speculative:"Mental health systems could formally integrate meditation, psychedelic-assisted therapy, and structured support for people reporting anomalous experiences as standard offerings, not just adjuncts. How much of this happens depends heavily on how the current research plays out." },
-    { name:"Relationships", framing:"Attachment, identity, intimacy",
-      observed:"Therapy language — attachment styles, trauma, \"doing the work\" — is now common in how people talk about relationships online.",
-      trajectory:"AI companions get more emotionally responsive, and more people form real attachments to them. Expect more public debate about what that does to human relationships, not just whether it's good or bad.",
-      speculative:"Society may need new categories for relationships that don't fit \"human to human\" — AI companions, digital recreations of people who've died, or bonds formed mainly through shared practice rather than romance or family. Genuinely uncertain territory." },
-    { name:"Economy", framing:"Attention economy → meaning economy",
-      observed:"A large wellness and self-improvement economy already exists — apps, retreats, supplements, coaching — built on selling people's attention and self-improvement.",
-      trajectory:"That economy keeps growing and blends further into mainstream healthcare and HR. \"Meaning\" becomes a product category, the way \"fitness\" did.",
-      speculative:"A more radical version: some economic value gets measured in terms of attention quality or wellbeing contribution, not just output — a \"meaning economy\" layered onto or replacing parts of the attention economy. The most utopian-sounding item here, and it could just as easily become a new layer of commodification instead." },
-    { name:"Death Systems", framing:"Grief, afterlife beliefs, digital immortality",
-      observed:"\"Griefbots\" and digital legacy services that recreate a deceased person's voice or writing are already a real, if small, consumer category.",
-      trajectory:"Digital memorialization becomes a normal part of estate planning, alongside renewed mainstream interest in near-death-experience research and end-of-life spiritual care.",
-      speculative:"Ideas like mind uploading or some form of digital \"continuation\" could become a real framework some people use to think about death — alongside, not necessarily replacing, traditional religious and cultural afterlife beliefs. Highly speculative and ethically loaded." }
-  ],
-  goals: [
-    { name:"Reduce psychological fragmentation",
-      desc:"Less internal conflict between the part of you that wants to change and the part that resists. More coherence between what you value, feel, and do — instead of running on autopilot or fighting yourself." },
-    { name:"Increase emotional coherence",
-      desc:"Feeling and expressing emotions in proportion to what's actually happening, with less swinging between numbness and being overwhelmed. Emotions as useful signals, not something to suppress or get swept away by." },
-    { name:"Expand systems thinking capacity",
-      desc:"Seeing how individual choices connect to bigger patterns — ecological, social, economic — instead of only thinking in isolated, short-term terms. Holding cause and effect across longer chains." },
-    { name:"Strengthen collective empathy",
-      desc:"Extending genuine care to people outside your immediate circle — strangers, other species, future generations — without it staying abstract or becoming a performance." },
-    { name:"Enhance reality-testing clarity (avoid delusion traps)",
-      desc:"Being able to tell the difference between real insight and a story you want to be true. This matters more as \"awakening\" content spreads online faster than anyone can check it — discernment as part of the practice, not separate from it." },
-    { name:"Integrate science and inner experience",
-      desc:"Holding rigorous, evidence-based thinking and direct inner experience — meditation, altered states, intuition — without forcing one to dominate the other, and without pretending they're interchangeable." }
-  ],
-  scenarios: [
-    { type:"best", tag:"Best case · Good × optimistic", title:"Integration",
-      desc:"Contemplative practice, psychedelic therapy, and consciousness research mature into regulated, evidence-backed parts of healthcare and education. People have more real tools for processing difficult emotions and finding meaning. \"Spiritual\" language becomes less polarized — used by religious and secular people alike, without each side assuming the worst about the other. AI helps personalize practice without replacing community. Not a utopia — just a meaningful improvement on where things are now." },
-    { type:"base", tag:"Base case · Neutral × most likely", title:"Patchwork",
-      desc:"Progress continues, but unevenly. Some places get real access to psychedelic therapy and good mental healthcare; many don't. The wellness economy keeps growing, mixing genuine help with marketing and hype in roughly the same proportions as today. AI-personalized practice becomes normal, and its long-term effect on depth of practice stays debated without resolution. \"Awakening\" language keeps spreading online faster than institutions can respond — some of it useful, some of it conspiracy-adjacent. No big breakthrough, no big collapse: more of the current mixed picture, at a larger scale." },
-    { type:"worst", tag:"Worst case · Bad × pessimistic", title:"Fragmentation",
-      desc:"The same AI personalization that could deepen practice instead optimizes for engagement — surfacing increasingly extreme spiritual or conspiracy content because that's what keeps people watching. Reality-testing erodes for a meaningful share of the population, and \"awakening\" narratives fuse with political conspiracy in ways that are hard to walk back. Unregulated psychedelic and \"energy\" products cause real harm in some cases. Mental health systems don't keep pace, so people self-medicate with whatever's online. None of this is inevitable — it's the direction current trends point if nothing changes." },
-    { type:"wildcard", tag:"Wildcard · Mixed / extreme uncertainty", title:"The Unmodeled Variable",
-      desc:"Something happens that this radar can't currently account for. A few possibilities: AI systems start behaving in ways many people interpret as some form of interiority, forcing a real public reckoning with what \"consciousness\" means as policy, not just philosophy. Or a major finding in physics, neuroscience, or psi research shifts mainstream consensus on materialism in a way that's hard to imagine from here. Or a large-scale collective event — a pandemic, an AI disruption, an ecological crisis — shifts how a large number of people relate to meaning and mortality, for better or worse. By definition, a wildcard means we don't know which of these, or something else entirely, happens, or what it does to everything above." }
-  ],
-  note:"Everything above mixes two things: patterns visible today (marked Observed) and reasoned extrapolation beyond what's currently known (marked Trajectory or Speculative). The further out the time horizon, the lower the confidence — treat anything past roughly ten years as a sketch of possibilities, not a forecast."
 };
 
 // ---------- Layout math ----------
@@ -987,8 +909,6 @@ const listEl = document.getElementById('itemList');
 const detailCard = document.getElementById('detailCard');
 const impactSlider = document.getElementById('impactSlider');
 const impactVal = document.getElementById('impactVal');
-const stageEl = document.querySelector('.stage');
-const outlookViewEl = document.getElementById('outlookView');
 
 function computePositions(ds){
   const sectorSize = 360 / ds.categories.length;
@@ -1056,6 +976,11 @@ function renderRadar(ds){
     const label = el('text', { class:'blip-num', x:item.x, y:item.y, 'data-id': item.id }, item.id + 1);
     g.appendChild(circle);
     g.appendChild(label);
+    const nameLabel = el('text', {
+      class:'item-label', x:item.x + 17, y:item.y + 1, 'data-id': item.id,
+      'text-anchor':'start', 'dominant-baseline':'central'
+    }, truncateLabel(item.name));
+    g.appendChild(nameLabel);
     svg.appendChild(g);
   });
 
@@ -1066,6 +991,112 @@ function renderRadar(ds){
     t.addEventListener('click', () => selectItem(+t.getAttribute('data-id')));
   });
 }
+
+function truncateLabel(name, max = 26){
+  return name.length > max ? name.slice(0, max - 1) + '…' : name;
+}
+
+// ---------- Zoom & pan ----------
+const BASE_VIEW = { x:0, y:0, w:1000, h:1000 };
+const view = { x:0, y:0, w:1000, h:1000 };
+const MIN_SCALE = 0.2;
+const MAX_SCALE = 4;
+
+function applyView(){
+  svg.setAttribute('viewBox', `${view.x} ${view.y} ${view.w} ${view.h}`);
+}
+
+function resetView(){
+  view.x = BASE_VIEW.x;
+  view.y = BASE_VIEW.y;
+  view.w = BASE_VIEW.w;
+  view.h = BASE_VIEW.h;
+  applyView();
+}
+
+function svgPoint(clientX, clientY){
+  const rect = svg.getBoundingClientRect();
+  const px = (clientX - rect.left) / rect.width;
+  const py = (clientY - rect.top) / rect.height;
+  return {
+    x: view.x + px * view.w,
+    y: view.y + py * view.h
+  };
+}
+
+function zoomAt(clientX, clientY, factor){
+  const pt = svgPoint(clientX, clientY);
+  let newW = view.w * factor;
+  let newH = view.h * factor;
+
+  const minW = BASE_VIEW.w / MAX_SCALE;
+  const maxW = BASE_VIEW.w / MIN_SCALE;
+  newW = Math.min(Math.max(newW, minW), maxW);
+  newH = Math.min(Math.max(newH, minW), maxW);
+
+  const ratioX = (pt.x - view.x) / view.w;
+  const ratioY = (pt.y - view.y) / view.h;
+
+  view.x = pt.x - ratioX * newW;
+  view.y = pt.y - ratioY * newH;
+  view.w = newW;
+  view.h = newH;
+  applyView();
+}
+
+svg.addEventListener('wheel', (e) => {
+  e.preventDefault();
+  const factor = e.deltaY > 0 ? 1.1 : 0.9;
+  zoomAt(e.clientX, e.clientY, factor);
+}, { passive:false });
+
+let isPanning = false;
+let panStart = null;
+let viewStart = null;
+
+svg.addEventListener('pointerdown', (e) => {
+  if(e.button !== undefined && e.button !== 0) return;
+  isPanning = true;
+  panStart = { x: e.clientX, y: e.clientY };
+  viewStart = { x: view.x, y: view.y };
+  svg.classList.add('panning');
+  svg.setPointerCapture(e.pointerId);
+});
+
+svg.addEventListener('pointermove', (e) => {
+  if(!isPanning) return;
+  const rect = svg.getBoundingClientRect();
+  const dx = (e.clientX - panStart.x) / rect.width * view.w;
+  const dy = (e.clientY - panStart.y) / rect.height * view.h;
+  view.x = viewStart.x - dx;
+  view.y = viewStart.y - dy;
+  applyView();
+});
+
+function endPan(e){
+  if(!isPanning) return;
+  isPanning = false;
+  svg.classList.remove('panning');
+  if(e && e.pointerId !== undefined){
+    try{ svg.releasePointerCapture(e.pointerId); }catch(err){}
+  }
+}
+
+svg.addEventListener('pointerup', endPan);
+svg.addEventListener('pointercancel', endPan);
+svg.addEventListener('pointerleave', endPan);
+
+document.getElementById('zoomInBtn').addEventListener('click', () => {
+  const rect = svg.getBoundingClientRect();
+  zoomAt(rect.left + rect.width/2, rect.top + rect.height/2, 0.8);
+});
+document.getElementById('zoomOutBtn').addEventListener('click', () => {
+  const rect = svg.getBoundingClientRect();
+  zoomAt(rect.left + rect.width/2, rect.top + rect.height/2, 1.25);
+});
+document.getElementById('zoomResetBtn').addEventListener('click', () => {
+  resetView();
+});
 
 function renderCategoryFilters(ds){
   categoryFiltersEl.innerHTML = '';
@@ -1139,6 +1170,12 @@ function applyFilter(){
     b.classList.toggle('dim', !visible);
   });
   svg.querySelectorAll('.blip-num').forEach(t => {
+    const id = +t.getAttribute('data-id');
+    const item = current.items[id];
+    const visible = activeCats.has(item.cat) && activeRings.has(item.ring) && item.impact >= minImpact;
+    t.classList.toggle('dim', !visible);
+  });
+  svg.querySelectorAll('.item-label').forEach(t => {
     const id = +t.getAttribute('data-id');
     const item = current.items[id];
     const visible = activeCats.has(item.cat) && activeRings.has(item.ring) && item.impact >= minImpact;
@@ -1220,10 +1257,6 @@ Object.keys(datasets).forEach(key => {
   toggleEl.appendChild(btn);
 });
 
-const outlookBtn = el('button', { 'data-key': 'outlook' }, outlook.label);
-outlookBtn.addEventListener('click', () => switchDataset('outlook'));
-toggleEl.appendChild(outlookBtn);
-
 function switchDataset(key){
   if(key === currentKey) return;
   currentKey = key;
@@ -1231,21 +1264,6 @@ function switchDataset(key){
   toggleEl.querySelectorAll('button').forEach(b => {
     b.classList.toggle('active', b.getAttribute('data-key') === key);
   });
-
-  if(key === 'outlook'){
-    stageEl.style.display = 'none';
-    outlookViewEl.style.display = '';
-
-    document.getElementById('eyebrow').textContent = outlook.eyebrow;
-    document.getElementById('title').textContent = outlook.title;
-    document.getElementById('subtitle').textContent = outlook.subtitle;
-
-    renderOutlook();
-    return;
-  }
-
-  stageEl.style.display = '';
-  outlookViewEl.style.display = 'none';
 
   current = datasets[key];
 
@@ -1266,71 +1284,7 @@ function switchDataset(key){
   renderList(current);
   resetDetail();
   applyFilter();
-}
-
-// ---------- Outlook view ----------
-function renderOutlook(){
-  outlookViewEl.innerHTML = '';
-
-  const domainSection = el('div', { class:'outlook-section' });
-  domainSection.appendChild(el('h3', {}, 'Impacts: Where This Shows Up in Life'));
-  domainSection.appendChild(el('p', { class:'section-sub' }, 'Each domain has three layers: what\'s observable today, where the trend points over the next decade or so, and a further-out speculative read. The labels are doing real work here, not decoration.'));
-
-  const domainGrid = el('div', { class:'domain-grid' });
-  outlook.domains.forEach(d => {
-    const card = el('div', { class:'domain-card' });
-    card.appendChild(el('h4', {}, `${d.name} — ${d.framing}`));
-
-    const rowObs = el('div', { class:'domain-row' });
-    rowObs.appendChild(el('span', { class:'domain-tag observed' }, 'Observed'));
-    rowObs.appendChild(el('p', {}, d.observed));
-    card.appendChild(rowObs);
-
-    const rowTraj = el('div', { class:'domain-row' });
-    rowTraj.appendChild(el('span', { class:'domain-tag trajectory' }, 'Trajectory'));
-    rowTraj.appendChild(el('p', {}, d.trajectory));
-    card.appendChild(rowTraj);
-
-    const rowSpec = el('div', { class:'domain-row' });
-    rowSpec.appendChild(el('span', { class:'domain-tag speculative' }, 'Speculative'));
-    rowSpec.appendChild(el('p', {}, d.speculative));
-    card.appendChild(rowSpec);
-
-    domainGrid.appendChild(card);
-  });
-  domainSection.appendChild(domainGrid);
-  outlookViewEl.appendChild(domainSection);
-
-  const goalsSection = el('div', { class:'outlook-section' });
-  goalsSection.appendChild(el('h3', {}, 'Consciousness Development Goals'));
-  goalsSection.appendChild(el('p', { class:'section-sub' }, 'Not a checklist or a curriculum. These are directions worth moving in regardless of which specific practices or technologies get there.'));
-
-  const goalsGrid = el('div', { class:'goals-grid' });
-  outlook.goals.forEach(g => {
-    const card = el('div', { class:'goal-card' });
-    card.appendChild(el('h5', {}, g.name));
-    card.appendChild(el('p', {}, g.desc));
-    goalsGrid.appendChild(card);
-  });
-  goalsSection.appendChild(goalsGrid);
-  outlookViewEl.appendChild(goalsSection);
-
-  const scenarioSection = el('div', { class:'outlook-section' });
-  scenarioSection.appendChild(el('h3', {}, 'Future Scenarios'));
-  scenarioSection.appendChild(el('p', { class:'section-sub' }, 'Four ways the next 10-25 years could go. Not predictions — a spread of possibilities worth holding at once.'));
-
-  const scenarioGrid = el('div', { class:'scenario-grid' });
-  outlook.scenarios.forEach(s => {
-    const card = el('div', { class:`scenario-card ${s.type}` });
-    card.appendChild(el('div', { class:'scenario-tag' }, s.tag));
-    card.appendChild(el('h4', {}, s.title));
-    card.appendChild(el('p', {}, s.desc));
-    scenarioGrid.appendChild(card);
-  });
-  scenarioSection.appendChild(scenarioGrid);
-  outlookViewEl.appendChild(scenarioSection);
-
-  outlookViewEl.appendChild(el('p', { class:'speculation-note' }, outlook.note));
+  resetView();
 }
 
 // ---------- Suggest a Trend ----------
@@ -1369,7 +1323,7 @@ function resetSuggestForm(){
   sgTitle.value = '';
   sgDesc.value = '';
   sgEvidence.value = '';
-  sgLens.value = (currentKey === 'outlook') ? 'transcendence' : currentKey;
+  sgLens.value = currentKey;
   populateCategorySelect(sgLens.value);
   populateRingSelect();
   sgConfidence.value = 50;
@@ -1470,6 +1424,7 @@ renderCategoryFilters(current);
 renderRingFilters();
 renderList(current);
 resetDetail();
+resetView();
 </script>
 </body>
 </html>
