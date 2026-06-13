@@ -38,8 +38,8 @@
     overflow:hidden;
     display:flex;
     flex-direction:column;
-    padding: 18px 22px;
-    gap:14px;
+    padding: 12px 18px;
+    gap:10px;
   }
 
   /* Topbar */
@@ -56,22 +56,22 @@
     letter-spacing:3px;
     text-transform:uppercase;
     color:var(--ink-faint);
-    margin-bottom:6px;
+    margin-bottom:4px;
   }
   .brand h1{
     font-family: var(--font-serif);
-    font-size:26px;
+    font-size:22px;
     font-weight:500;
     letter-spacing:-0.01em;
-    margin:0 0 4px 0;
+    margin:0 0 3px 0;
     color:var(--ink);
   }
   .brand p{
     margin:0;
     color:var(--ink-soft);
-    font-size:12.5px;
-    max-width:560px;
-    line-height:1.55;
+    font-size:12px;
+    max-width:580px;
+    line-height:1.5;
   }
 
   .toggle-group{
@@ -106,8 +106,8 @@
   .stage{
     flex:1 1 auto;
     display:grid;
-    grid-template-columns: 232px 1fr 320px;
-    gap:14px;
+    grid-template-columns: 196px 1fr 272px;
+    gap:10px;
     min-height:0;
   }
   .panel{
@@ -115,7 +115,7 @@
     border:1px solid var(--line-soft);
     border-radius: var(--radius-lg);
     box-shadow: var(--shadow);
-    padding:18px;
+    padding:14px;
     min-height:0;
     display:flex;
     flex-direction:column;
@@ -183,6 +183,10 @@
     font-size:10px; font-weight:700; color:var(--ink-soft);
     flex:0 0 auto;
   }
+  .pill .pill-text{ display:flex; flex-direction:column; gap:1px; }
+  .pill .pill-text .range{
+    font-size:10px; font-weight:500; color:var(--ink-faint); letter-spacing:0.3px;
+  }
 
   /* Impact slider */
   .impact-row{ display:flex; align-items:center; gap:10px; }
@@ -245,9 +249,9 @@
   .ring-label{
     fill:var(--ink-faint);
     font-family: var(--font-text);
-    font-size:11.5px;
+    font-size:10px;
     text-transform:uppercase;
-    letter-spacing:2px;
+    letter-spacing:1.5px;
     font-weight:700;
   }
   .category-label{
@@ -453,18 +457,18 @@
 const palette = ["#5FB89A","#E08B7D","#A99BD9","#6FA8DC","#D9B35C"];
 
 const rings = [
-  { id:0, name:"Mainstreaming", desc:"Already entering institutions, markets, and everyday culture." },
-  { id:1, name:"Accelerating", desc:"Clear momentum — adoption curves bending upward." },
-  { id:2, name:"Emerging Signal", desc:"Early but real — niche communities, first studies, first pilots." },
-  { id:3, name:"On the Horizon", desc:"Speculative or nascent — worth watching, not yet validated." }
+  { id:0, name:"Near", range:"0–5 yrs", desc:"Already happening, or close to it." },
+  { id:1, name:"Mid", range:"5–10 yrs", desc:"Gaining real momentum — likely common within a decade." },
+  { id:2, name:"Far", range:"10–30 yrs", desc:"Early signals today — could be normal in a generation." },
+  { id:3, name:"Distant", range:"30–50+ yrs", desc:"Speculative — possible, but likely decades away, if ever." }
 ];
 
 const datasets = {
   transcendence: {
     label: "Transcendence",
-    eyebrow: "Foresight Map · 2026",
+    eyebrow: "Trends to Watch · 2026",
     title: "Transcendence Radar",
-    subtitle: "Where consciousness, contemplative practice, plant medicine, post-materialist science, and technology are heading. Ring = momentum, not value.",
+    subtitle: "Where ideas about meditation, spirituality, psychedelics, and the mind are headed next. The closer to the center, the sooner it's likely to go mainstream. Click any point for details.",
     categories: [
       { id:0, name:"Inner Technologies & Practice" },
       { id:1, name:"Psychedelic & Plant Medicine Renaissance" },
@@ -554,15 +558,31 @@ const datasets = {
         source:"https://www.etsy.com/listing/4468541336/great-awakening-map-2026-printable", sourceLabel:"Example: \"Great Awakening Map 2026\" printable, Etsy" },
       { name:"Post-Growth Spirituality", cat:4, ring:3, impact:3, confidence:25,
         desc:"Degrowth and post-growth economics are starting to pick up spiritual and contemplative framing — questioning not just GDP as a metric, but the achievement-oriented self that GDP-thinking assumes. Still mostly in essays and small conferences, not policy.",
+        source:null, sourceLabel:null },
+
+      { name:"UFO/UAP Disclosure Becomes a Government Process", cat:4, ring:0, impact:3, confidence:65,
+        desc:"What used to be fringe talk is now a congressional process: the House Oversight Committee held public hearings in 2025 where military officials testified about unidentified anomalous phenomena, and a 2026 defense bill requires the Pentagon to brief Congress on UAP incidents. Many 'awakening' communities treat this as an early step toward bigger disclosures — worth tracking regardless of what's eventually revealed.",
+        source:"https://oversight.house.gov/release/hearing-wrap-up-transparency-and-accountability-needed-to-provide-accurate-information-on-uaps-to-the-american-people%EF%BF%BC/", sourceLabel:"House Oversight Committee — UAP Hearing Wrap-Up" },
+      { name:"\"Lost History\" and Ancient Civilization Theories Go Mainstream", cat:4, ring:1, impact:2, confidence:55,
+        desc:"Documentaries and bestsellers arguing that ancient civilizations were more advanced than mainstream archaeology admits (Atlantis, Göbekli Tepe, lost cities) keep finding huge audiences. It's part entertainment, part a broader hunger for stories that put 'forgotten knowledge' at the center of where humanity is headed.",
+        source:null, sourceLabel:null },
+      { name:"Manifestation and \"Law of Attraction\" Content Floods Social Media", cat:4, ring:0, impact:2, confidence:70,
+        desc:"Videos about manifesting money, relationships, and 'your reality' are some of the most-watched spiritual content online. It's a simplified, internet-native version of older mind-over-matter ideas — and it's already mainstream, not emerging.",
+        source:null, sourceLabel:null },
+      { name:"\"Starseed\" and Indigo Identity Communities Grow Online", cat:4, ring:2, impact:1, confidence:30,
+        desc:"Online communities built around the idea that some people are 'old souls' from other worlds or timelines (starseeds, indigo children) keep finding new audiences, especially among younger users on TikTok and Discord. A niche identity trend, but a steady one.",
+        source:null, sourceLabel:null },
+      { name:"\"Suppressed Technology\" Claims Keep Recirculating Online", cat:3, ring:3, impact:1, confidence:15,
+        desc:"Claims that free-energy devices or other breakthrough technologies were buried by governments or corporations are a recurring theme in meme-maps and awakening content. There's no credible evidence for the specific claims, but the story keeps resurfacing — a long-running cultural pattern more than a near-term trend.",
         source:null, sourceLabel:null }
     ]
   },
 
   transhumanism: {
     label: "Transhumanism",
-    eyebrow: "Foresight Map · 2026",
+    eyebrow: "Trends to Watch · 2026",
     title: "Transhumanism Radar",
-    subtitle: "Where biotech, neurotechnology, and AI augmentation are heading — the 'upgrade the body and mind' counterpoint to the Transcendence map. Ring = momentum, not value.",
+    subtitle: "Where technology for upgrading the body and brain is headed next — anti-aging drugs, gene editing, brain implants, and AI tools. The closer to the center, the sooner it's likely to go mainstream.",
     categories: [
       { id:0, name:"Longevity & Anti-Aging" },
       { id:1, name:"Genetic & Biological Engineering" },
@@ -714,7 +734,7 @@ function renderRadar(ds){
   rings.forEach((ring, i) => {
     const rMid = (ringBounds[i] + ringBounds[i+1]) / 2;
     const [x, y] = polar(CX, CY, rMid, 1);
-    svg.appendChild(el('text', { class:'ring-label', x:x, y:y, 'text-anchor':'start' }, ring.name));
+    svg.appendChild(el('text', { class:'ring-label', x:x, y:y, 'text-anchor':'start' }, ring.name + ' · ' + ring.range));
   });
 
   ds.categories.forEach((c, i) => {
@@ -777,7 +797,10 @@ function renderRingFilters(){
   rings.forEach(r => {
     const pill = el('div', { class:'pill', 'data-ring': r.id });
     pill.appendChild(el('span', { class:'ring-num' }, r.id + 1));
-    pill.appendChild(document.createTextNode(r.name));
+    const textWrap = el('div', { class:'pill-text' });
+    textWrap.appendChild(el('span', { class:'name' }, r.name));
+    textWrap.appendChild(el('span', { class:'range' }, r.range));
+    pill.appendChild(textWrap);
     pill.addEventListener('click', () => {
       if(activeRings.has(r.id)){
         activeRings.delete(r.id);
@@ -852,7 +875,7 @@ function selectItem(id){
   detailCard.innerHTML = '';
   const badgeRow = el('div', { class:'badge-row' });
   badgeRow.appendChild(el('span', { class:'badge', style:`background:${color}` }, cat.name));
-  badgeRow.appendChild(el('span', { class:'badge ring' }, 'Ring ' + (ring.id+1) + ' · ' + ring.name));
+  badgeRow.appendChild(el('span', { class:'badge ring' }, ring.name + ' · ' + ring.range));
   detailCard.appendChild(badgeRow);
   detailCard.appendChild(el('h2', {}, item.name));
 
