@@ -398,11 +398,157 @@
     font-size:11px;
   }
 
+  /* Evidence / examples */
+  .examples-block{ margin-bottom:12px; }
+  .examples-block .examples-label{
+    font-size:10px; text-transform:uppercase; letter-spacing:1.5px;
+    color:var(--ink-faint); font-weight:700; margin-bottom:6px;
+  }
+  .examples-block ul{ margin:0; padding-left:18px; }
+  .examples-block li{
+    font-size:12px; line-height:1.6; color:var(--ink-soft); margin-bottom:4px;
+  }
+
+  /* Suggest-a-trend FAB */
+  .fab{
+    position:fixed; right:24px; bottom:24px;
+    width:52px; height:52px; border-radius:50%;
+    background: var(--accent); color:#0a0d16;
+    border:none; font-size:26px; font-weight:600; line-height:1;
+    display:flex; align-items:center; justify-content:center;
+    cursor:pointer; box-shadow: var(--shadow); z-index:50;
+    transition: transform .15s ease;
+  }
+  .fab:hover{ transform: scale(1.06); }
+
+  /* Suggest-a-trend modal */
+  .modal-overlay{
+    position:fixed; inset:0; background:rgba(5,7,12,0.6);
+    display:flex; align-items:center; justify-content:center;
+    z-index:100; padding:24px;
+  }
+  .modal-overlay.hidden{ display:none; }
+  .modal{
+    background: var(--surface); border:1px solid var(--line);
+    border-radius: var(--radius-lg); box-shadow: var(--shadow);
+    width:100%; max-width:480px; max-height:90vh; overflow-y:auto;
+    padding:22px 24px;
+  }
+  .modal::-webkit-scrollbar{ width:5px; }
+  .modal::-webkit-scrollbar-thumb{ background: var(--line); border-radius:4px; }
+  .modal h2{
+    font-family: var(--font-serif); font-size:19px; font-weight:500;
+    margin:0 0 4px 0; color:var(--ink);
+  }
+  .modal .modal-sub{ font-size:12px; color:var(--ink-soft); margin:0 0 16px 0; line-height:1.5; }
+  .field{ margin-bottom:14px; }
+  .field label{
+    display:block; font-size:11px; font-weight:700; text-transform:uppercase;
+    letter-spacing:1px; color:var(--ink-faint); margin-bottom:6px;
+  }
+  .field input[type=text], .field textarea, .field select{
+    width:100%; background: var(--surface-soft); border:1px solid var(--line);
+    border-radius: var(--radius-sm); color:var(--ink); font-family:inherit;
+    font-size:13px; padding:9px 11px; outline:none;
+  }
+  .field input[type=text]:focus, .field textarea:focus, .field select:focus{
+    border-color: var(--accent);
+  }
+  .field textarea{ resize:vertical; min-height:64px; line-height:1.5; }
+  .field-row{ display:flex; gap:12px; }
+  .field-row .field{ flex:1; }
+  .field .range-row{ display:flex; align-items:center; gap:10px; }
+  .field .range-row input[type=range]{
+    flex:1; -webkit-appearance:none; height:3px; border-radius:3px;
+    background: var(--line); outline:none;
+  }
+  .field .range-row input[type=range]::-webkit-slider-thumb{
+    -webkit-appearance:none; width:16px; height:16px; border-radius:50%;
+    background: var(--accent); cursor:pointer;
+    box-shadow: 0 0 10px rgba(111,209,200,0.6);
+  }
+  .field .range-row .range-out{ font-size:12px; font-weight:700; color:var(--accent); min-width:40px; text-align:right; }
+  .modal-actions{ display:flex; justify-content:flex-end; gap:10px; margin-top:18px; }
+  .btn{
+    font-family:inherit; font-size:12.5px; font-weight:600; letter-spacing:0.2px;
+    padding:9px 18px; border-radius:999px; cursor:pointer; border:1px solid var(--line);
+    background:transparent; color:var(--ink-soft); transition: all .12s ease;
+  }
+  .btn:hover{ color:var(--ink); border-color: rgba(255,255,255,0.18); }
+  .btn.primary{ background: var(--accent); color:#0a0d16; border-color: var(--accent); font-weight:700; }
+  .btn.primary:hover{ opacity:0.9; }
+  .modal-note{ font-size:11px; color:var(--ink-faint); line-height:1.5; margin-top:12px; }
+
+  /* Outlook view */
+  .outlook-view{
+    flex:1 1 auto; min-height:0; overflow-y:auto; padding-right:6px;
+  }
+  .outlook-view::-webkit-scrollbar{ width:5px; }
+  .outlook-view::-webkit-scrollbar-thumb{ background: var(--line); border-radius:4px; }
+  .outlook-section{ margin-bottom:28px; }
+  .outlook-section:last-child{ margin-bottom:0; }
+  .outlook-section h3{
+    font-size:11px; text-transform:uppercase; letter-spacing:2px;
+    color:var(--ink-faint); font-weight:700; margin:0 0 4px 0;
+  }
+  .outlook-section .section-sub{
+    font-size:12.5px; color:var(--ink-soft); margin:0 0 16px 0; line-height:1.6; max-width:760px;
+  }
+  .domain-grid{ display:grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap:12px; }
+  .domain-card{
+    background: var(--surface); border:1px solid var(--line-soft);
+    border-radius: var(--radius-md); box-shadow: var(--shadow); padding:14px 16px;
+  }
+  .domain-card h4{
+    font-family: var(--font-serif); font-size:15px; font-weight:500; margin:0 0 8px 0; color:var(--ink);
+  }
+  .domain-card .domain-row{ margin-bottom:8px; }
+  .domain-card .domain-row:last-child{ margin-bottom:0; }
+  .domain-card .domain-tag{
+    display:block; font-size:9.5px; font-weight:700; text-transform:uppercase;
+    letter-spacing:1px; color:var(--ink-faint); margin-bottom:3px;
+  }
+  .domain-card .domain-tag.observed{ color:#5FB89A; }
+  .domain-card .domain-tag.trajectory{ color:#6FA8DC; }
+  .domain-card .domain-tag.speculative{ color:#A99BD9; }
+  .domain-card p{ font-size:12px; line-height:1.6; color:var(--ink-soft); margin:0; }
+
+  .goals-grid{ display:grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap:10px; }
+  .goal-card{
+    background: var(--surface); border:1px solid var(--line-soft);
+    border-radius: var(--radius-md); box-shadow: var(--shadow); padding:12px 14px;
+  }
+  .goal-card h5{ font-size:13px; font-weight:600; margin:0 0 4px 0; color:var(--ink); }
+  .goal-card p{ font-size:11.5px; line-height:1.55; color:var(--ink-soft); margin:0; }
+
+  .scenario-grid{ display:grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap:12px; }
+  .scenario-card{
+    background: var(--surface); border:1px solid var(--line-soft);
+    border-radius: var(--radius-md); box-shadow: var(--shadow); padding:14px 16px;
+    border-top:3px solid var(--line);
+  }
+  .scenario-card.best{ border-top-color:#5FB89A; }
+  .scenario-card.base{ border-top-color:#6FA8DC; }
+  .scenario-card.worst{ border-top-color:#E08B7D; }
+  .scenario-card.wildcard{ border-top-color:#A99BD9; }
+  .scenario-card .scenario-tag{
+    font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:1.5px;
+    color:var(--ink-faint); margin-bottom:4px;
+  }
+  .scenario-card h4{ font-family: var(--font-serif); font-size:15px; font-weight:500; margin:0 0 8px 0; color:var(--ink); }
+  .scenario-card p{ font-size:12px; line-height:1.6; color:var(--ink-soft); margin:0; }
+
+  .speculation-note{
+    font-size:11px; color:var(--ink-faint); line-height:1.6; margin-top:6px;
+    border-top:1px solid var(--line-soft); padding-top:14px;
+  }
+
   @media (max-width: 980px){
     body{ height:auto; overflow:auto; }
     .stage{ grid-template-columns: 1fr; }
     .radar-wrap{ min-height:480px; }
     .panel{ max-height:none; }
+    .outlook-view{ overflow-y:visible; }
   }
 </style>
 </head>
@@ -450,6 +596,67 @@
         <h3>All signals</h3>
         <div class="list-scroll" id="itemList"></div>
       </div>
+    </div>
+  </div>
+
+  <div class="outlook-view" id="outlookView" style="display:none;"></div>
+
+  <button class="fab" id="suggestBtn" title="Suggest a new trend">+</button>
+
+  <div class="modal-overlay hidden" id="modalOverlay">
+    <div class="modal">
+      <h2>Suggest a Trend</h2>
+      <p class="modal-sub">Spot something we're missing? Fill this in and it opens as a draft on GitHub — the maintainers review, edit, and add it from there.</p>
+      <div class="field">
+        <label for="sgTitle">Title</label>
+        <input type="text" id="sgTitle" placeholder="e.g. Contemplative Neuroscience Goes Clinical" />
+      </div>
+      <div class="field">
+        <label for="sgDesc">Description</label>
+        <textarea id="sgDesc" placeholder="What is it, and why does it belong on the radar?"></textarea>
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label for="sgLens">Lens</label>
+          <select id="sgLens">
+            <option value="transcendence">Transcendence</option>
+            <option value="transhumanism">Transhumanism</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="sgCategory">Category</label>
+          <select id="sgCategory"></select>
+        </div>
+      </div>
+      <div class="field">
+        <label for="sgRing">Time horizon</label>
+        <select id="sgRing"></select>
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label for="sgConfidence">Confidence</label>
+          <div class="range-row">
+            <input type="range" id="sgConfidence" min="0" max="100" step="5" value="50" />
+            <span class="range-out" id="sgConfidenceOut">50%</span>
+          </div>
+        </div>
+        <div class="field">
+          <label for="sgImpact">Impact</label>
+          <div class="range-row">
+            <input type="range" id="sgImpact" min="1" max="5" step="1" value="3" />
+            <span class="range-out" id="sgImpactOut">3 / 5</span>
+          </div>
+        </div>
+      </div>
+      <div class="field">
+        <label for="sgEvidence">Evidence / examples (optional)</label>
+        <textarea id="sgEvidence" placeholder="Links, studies, products, communities — one per line"></textarea>
+      </div>
+      <div class="modal-actions">
+        <button class="btn" id="sgCancel">Cancel</button>
+        <button class="btn primary" id="sgSubmit">Open on GitHub →</button>
+      </div>
+      <p class="modal-note">This opens a pre-filled GitHub issue in a new tab. You'll need a GitHub account to submit it — nothing is added to the radar automatically.</p>
     </div>
   </div>
 
@@ -562,19 +769,44 @@ const datasets = {
 
       { name:"UFO/UAP Disclosure Becomes a Government Process", cat:4, ring:0, impact:3, confidence:65,
         desc:"What used to be fringe talk is now a congressional process: the House Oversight Committee held public hearings in 2025 where military officials testified about unidentified anomalous phenomena, and a 2026 defense bill requires the Pentagon to brief Congress on UAP incidents. Many 'awakening' communities treat this as an early step toward bigger disclosures — worth tracking regardless of what's eventually revealed.",
-        source:"https://oversight.house.gov/release/hearing-wrap-up-transparency-and-accountability-needed-to-provide-accurate-information-on-uaps-to-the-american-people%EF%BF%BC/", sourceLabel:"House Oversight Committee — UAP Hearing Wrap-Up" },
+        source:"https://oversight.house.gov/release/hearing-wrap-up-transparency-and-accountability-needed-to-provide-accurate-information-on-uaps-to-the-american-people%EF%BF%BC/", sourceLabel:"House Oversight Committee — UAP Hearing Wrap-Up",
+        examples:[
+          "2025 House Oversight Committee hearings with on-record testimony from military officials about UAP encounters",
+          "2026 defense authorization language requiring the Pentagon to brief Congress on UAP incidents on a set schedule",
+          "AARO (All-domain Anomaly Resolution Office) periodic public reports and case reviews"
+        ] },
       { name:"\"Lost History\" and Ancient Civilization Theories Go Mainstream", cat:4, ring:1, impact:2, confidence:55,
         desc:"Documentaries and bestsellers arguing that ancient civilizations were more advanced than mainstream archaeology admits (Atlantis, Göbekli Tepe, lost cities) keep finding huge audiences. It's part entertainment, part a broader hunger for stories that put 'forgotten knowledge' at the center of where humanity is headed.",
-        source:null, sourceLabel:null },
+        source:null, sourceLabel:null,
+        examples:[
+          "Multi-season streaming documentaries built around 'lost civilization' theories drawing large audiences",
+          "Recurring bestseller-list books revisiting sites like Göbekli Tepe with pre-mainstream-timeline framing",
+          "Long-running YouTube and podcast channels dedicated to alternative archaeology, with millions of subscribers combined"
+        ] },
       { name:"Manifestation and \"Law of Attraction\" Content Floods Social Media", cat:4, ring:0, impact:2, confidence:70,
         desc:"Videos about manifesting money, relationships, and 'your reality' are some of the most-watched spiritual content online. It's a simplified, internet-native version of older mind-over-matter ideas — and it's already mainstream, not emerging.",
-        source:null, sourceLabel:null },
+        source:null, sourceLabel:null,
+        examples:[
+          "\"3-6-9 method\" and scripting videos regularly trending on TikTok and Instagram Reels",
+          "\"Reality shifting\" communities with their own subreddits, Discords, and shared vocabulary",
+          "Manifestation journals and planners now sold as mainstream stationery and self-help products"
+        ] },
       { name:"\"Starseed\" and Indigo Identity Communities Grow Online", cat:4, ring:2, impact:1, confidence:30,
         desc:"Online communities built around the idea that some people are 'old souls' from other worlds or timelines (starseeds, indigo children) keep finding new audiences, especially among younger users on TikTok and Discord. A niche identity trend, but a steady one.",
-        source:null, sourceLabel:null },
+        source:null, sourceLabel:null,
+        examples:[
+          "Active starseed and indigo-identity Discord servers and subreddits with member-built 'origin' quizzes",
+          "TikTok creators with large followings posting starseed identity and 'awakening symptom' content",
+          "Astrology apps adding 'soul origin' or 'star family' features alongside standard chart readings"
+        ] },
       { name:"\"Suppressed Technology\" Claims Keep Recirculating Online", cat:3, ring:3, impact:1, confidence:15,
         desc:"Claims that free-energy devices or other breakthrough technologies were buried by governments or corporations are a recurring theme in meme-maps and awakening content. There's no credible evidence for the specific claims, but the story keeps resurfacing — a long-running cultural pattern more than a near-term trend.",
-        source:null, sourceLabel:null }
+        source:null, sourceLabel:null,
+        examples:[
+          "Free-energy device myths (often tied to Tesla) recurring in meme-map and infographic content",
+          "Viral posts claiming key patents were 'bought and buried' by corporations or governments",
+          "Repeated appearances of these claims in Great Awakening Map-style printables and YouTube explainers"
+        ] }
     ]
   },
 
@@ -659,6 +891,68 @@ const datasets = {
   }
 };
 
+const outlook = {
+  label: "Outlook",
+  eyebrow: "Outlook · Speculative, Not News",
+  title: "Where Spirituality Is Headed",
+  subtitle: "A longer-range, exploratory look at how shifts in meditation, psychedelics, and consciousness research could ripple into daily life — and where it could go wrong. This isn't a news feed: it mixes what's observable today with reasoned speculation about what comes next, and labels which is which.",
+  domains: [
+    { name:"Education", framing:"How meaning is taught",
+      observed:"Mindfulness and social-emotional learning are now standard in many school curricula, and a growing number of universities run contemplative studies programs and meditation spaces.",
+      trajectory:"Attention and emotional-regulation training move further into core curriculum rather than staying an add-on. AI tutors start adjusting not just to what a student knows, but to their emotional state.",
+      speculative:"Schools could eventually track something like a student's sense of coherence or connectedness alongside literacy and math — treating meaning-making as a skill to develop. Speculative, and it raises a real question: who gets to define 'coherence'?" },
+    { name:"Work", framing:"Purpose vs. productivity",
+      observed:"\"Purpose\" and \"meaning at work\" are now standard language in corporate wellness and HR, even if what's behind the words varies a lot.",
+      trajectory:"As AI takes over more routine cognitive work, a job's value shifts toward judgment, care, and craft. Employers have to answer what people are actually for, not just what they produce.",
+      speculative:"Work could shift toward roles built around contribution and care rather than output, with income partly decoupled from labor through some form of guaranteed income. Speculative and politically contested — one possible direction, not a prediction." },
+    { name:"Governance", framing:"Values in policy",
+      observed:"Indigenous and ecological worldviews already show up in some land-rights and environmental policy. Psychedelic policy reform is a live legislative topic in dozens of U.S. states.",
+      trajectory:"More policy debates explicitly weigh collective wellbeing and intergenerational responsibility, not just growth and GDP.",
+      speculative:"Some governments could adopt formal wellbeing or \"flourishing\" metrics alongside economic ones, and build basic contemplative or ethics training into how public officials are trained. Still speculative — and easy to imagine being watered down or co-opted." },
+    { name:"Healthcare", framing:"Mental + spiritual health integration",
+      observed:"Psychedelic-assisted therapy is moving into licensed clinical settings. Spiritual care — chaplaincy — is already a recognized role in many hospitals.",
+      trajectory:"Existential and spiritual distress gets treated as a clinical category in more settings, especially palliative care, and insurance starts covering some of it.",
+      speculative:"Mental health systems could formally integrate meditation, psychedelic-assisted therapy, and structured support for people reporting anomalous experiences as standard offerings, not just adjuncts. How much of this happens depends heavily on how the current research plays out." },
+    { name:"Relationships", framing:"Attachment, identity, intimacy",
+      observed:"Therapy language — attachment styles, trauma, \"doing the work\" — is now common in how people talk about relationships online.",
+      trajectory:"AI companions get more emotionally responsive, and more people form real attachments to them. Expect more public debate about what that does to human relationships, not just whether it's good or bad.",
+      speculative:"Society may need new categories for relationships that don't fit \"human to human\" — AI companions, digital recreations of people who've died, or bonds formed mainly through shared practice rather than romance or family. Genuinely uncertain territory." },
+    { name:"Economy", framing:"Attention economy → meaning economy",
+      observed:"A large wellness and self-improvement economy already exists — apps, retreats, supplements, coaching — built on selling people's attention and self-improvement.",
+      trajectory:"That economy keeps growing and blends further into mainstream healthcare and HR. \"Meaning\" becomes a product category, the way \"fitness\" did.",
+      speculative:"A more radical version: some economic value gets measured in terms of attention quality or wellbeing contribution, not just output — a \"meaning economy\" layered onto or replacing parts of the attention economy. The most utopian-sounding item here, and it could just as easily become a new layer of commodification instead." },
+    { name:"Death Systems", framing:"Grief, afterlife beliefs, digital immortality",
+      observed:"\"Griefbots\" and digital legacy services that recreate a deceased person's voice or writing are already a real, if small, consumer category.",
+      trajectory:"Digital memorialization becomes a normal part of estate planning, alongside renewed mainstream interest in near-death-experience research and end-of-life spiritual care.",
+      speculative:"Ideas like mind uploading or some form of digital \"continuation\" could become a real framework some people use to think about death — alongside, not necessarily replacing, traditional religious and cultural afterlife beliefs. Highly speculative and ethically loaded." }
+  ],
+  goals: [
+    { name:"Reduce psychological fragmentation",
+      desc:"Less internal conflict between the part of you that wants to change and the part that resists. More coherence between what you value, feel, and do — instead of running on autopilot or fighting yourself." },
+    { name:"Increase emotional coherence",
+      desc:"Feeling and expressing emotions in proportion to what's actually happening, with less swinging between numbness and being overwhelmed. Emotions as useful signals, not something to suppress or get swept away by." },
+    { name:"Expand systems thinking capacity",
+      desc:"Seeing how individual choices connect to bigger patterns — ecological, social, economic — instead of only thinking in isolated, short-term terms. Holding cause and effect across longer chains." },
+    { name:"Strengthen collective empathy",
+      desc:"Extending genuine care to people outside your immediate circle — strangers, other species, future generations — without it staying abstract or becoming a performance." },
+    { name:"Enhance reality-testing clarity (avoid delusion traps)",
+      desc:"Being able to tell the difference between real insight and a story you want to be true. This matters more as \"awakening\" content spreads online faster than anyone can check it — discernment as part of the practice, not separate from it." },
+    { name:"Integrate science and inner experience",
+      desc:"Holding rigorous, evidence-based thinking and direct inner experience — meditation, altered states, intuition — without forcing one to dominate the other, and without pretending they're interchangeable." }
+  ],
+  scenarios: [
+    { type:"best", tag:"Best case · Good × optimistic", title:"Integration",
+      desc:"Contemplative practice, psychedelic therapy, and consciousness research mature into regulated, evidence-backed parts of healthcare and education. People have more real tools for processing difficult emotions and finding meaning. \"Spiritual\" language becomes less polarized — used by religious and secular people alike, without each side assuming the worst about the other. AI helps personalize practice without replacing community. Not a utopia — just a meaningful improvement on where things are now." },
+    { type:"base", tag:"Base case · Neutral × most likely", title:"Patchwork",
+      desc:"Progress continues, but unevenly. Some places get real access to psychedelic therapy and good mental healthcare; many don't. The wellness economy keeps growing, mixing genuine help with marketing and hype in roughly the same proportions as today. AI-personalized practice becomes normal, and its long-term effect on depth of practice stays debated without resolution. \"Awakening\" language keeps spreading online faster than institutions can respond — some of it useful, some of it conspiracy-adjacent. No big breakthrough, no big collapse: more of the current mixed picture, at a larger scale." },
+    { type:"worst", tag:"Worst case · Bad × pessimistic", title:"Fragmentation",
+      desc:"The same AI personalization that could deepen practice instead optimizes for engagement — surfacing increasingly extreme spiritual or conspiracy content because that's what keeps people watching. Reality-testing erodes for a meaningful share of the population, and \"awakening\" narratives fuse with political conspiracy in ways that are hard to walk back. Unregulated psychedelic and \"energy\" products cause real harm in some cases. Mental health systems don't keep pace, so people self-medicate with whatever's online. None of this is inevitable — it's the direction current trends point if nothing changes." },
+    { type:"wildcard", tag:"Wildcard · Mixed / extreme uncertainty", title:"The Unmodeled Variable",
+      desc:"Something happens that this radar can't currently account for. A few possibilities: AI systems start behaving in ways many people interpret as some form of interiority, forcing a real public reckoning with what \"consciousness\" means as policy, not just philosophy. Or a major finding in physics, neuroscience, or psi research shifts mainstream consensus on materialism in a way that's hard to imagine from here. Or a large-scale collective event — a pandemic, an AI disruption, an ecological crisis — shifts how a large number of people relate to meaning and mortality, for better or worse. By definition, a wildcard means we don't know which of these, or something else entirely, happens, or what it does to everything above." }
+  ],
+  note:"Everything above mixes two things: patterns visible today (marked Observed) and reasoned extrapolation beyond what's currently known (marked Trajectory or Speculative). The further out the time horizon, the lower the confidence — treat anything past roughly ten years as a sketch of possibilities, not a forecast."
+};
+
 // ---------- Layout math ----------
 const CX = 500, CY = 500;
 const ringBounds = [55, 135, 215, 295, 375];
@@ -693,6 +987,8 @@ const listEl = document.getElementById('itemList');
 const detailCard = document.getElementById('detailCard');
 const impactSlider = document.getElementById('impactSlider');
 const impactVal = document.getElementById('impactVal');
+const stageEl = document.querySelector('.stage');
+const outlookViewEl = document.getElementById('outlookView');
 
 function computePositions(ds){
   const sectorSize = 360 / ds.categories.length;
@@ -898,6 +1194,15 @@ function selectItem(id){
   detailCard.appendChild(metricRow);
   detailCard.appendChild(el('p', { class:'desc' }, item.desc));
 
+  if(item.examples && item.examples.length){
+    const ex = el('div', { class:'examples-block' });
+    ex.appendChild(el('div', { class:'examples-label' }, 'Evidence / Examples'));
+    const ul = el('ul', {});
+    item.examples.forEach(line => ul.appendChild(el('li', {}, line)));
+    ex.appendChild(ul);
+    detailCard.appendChild(ex);
+  }
+
   if(item.source){
     const link = el('a', { class:'src', href: item.source, target:'_blank', rel:'noopener' }, '↗ ' + (item.sourceLabel || 'Source'));
     detailCard.appendChild(link);
@@ -915,14 +1220,34 @@ Object.keys(datasets).forEach(key => {
   toggleEl.appendChild(btn);
 });
 
+const outlookBtn = el('button', { 'data-key': 'outlook' }, outlook.label);
+outlookBtn.addEventListener('click', () => switchDataset('outlook'));
+toggleEl.appendChild(outlookBtn);
+
 function switchDataset(key){
   if(key === currentKey) return;
   currentKey = key;
-  current = datasets[key];
 
   toggleEl.querySelectorAll('button').forEach(b => {
     b.classList.toggle('active', b.getAttribute('data-key') === key);
   });
+
+  if(key === 'outlook'){
+    stageEl.style.display = 'none';
+    outlookViewEl.style.display = '';
+
+    document.getElementById('eyebrow').textContent = outlook.eyebrow;
+    document.getElementById('title').textContent = outlook.title;
+    document.getElementById('subtitle').textContent = outlook.subtitle;
+
+    renderOutlook();
+    return;
+  }
+
+  stageEl.style.display = '';
+  outlookViewEl.style.display = 'none';
+
+  current = datasets[key];
 
   document.getElementById('eyebrow').textContent = current.eyebrow;
   document.getElementById('title').textContent = current.title;
@@ -942,6 +1267,187 @@ function switchDataset(key){
   resetDetail();
   applyFilter();
 }
+
+// ---------- Outlook view ----------
+function renderOutlook(){
+  outlookViewEl.innerHTML = '';
+
+  const domainSection = el('div', { class:'outlook-section' });
+  domainSection.appendChild(el('h3', {}, 'Impacts: Where This Shows Up in Life'));
+  domainSection.appendChild(el('p', { class:'section-sub' }, 'Each domain has three layers: what\'s observable today, where the trend points over the next decade or so, and a further-out speculative read. The labels are doing real work here, not decoration.'));
+
+  const domainGrid = el('div', { class:'domain-grid' });
+  outlook.domains.forEach(d => {
+    const card = el('div', { class:'domain-card' });
+    card.appendChild(el('h4', {}, `${d.name} — ${d.framing}`));
+
+    const rowObs = el('div', { class:'domain-row' });
+    rowObs.appendChild(el('span', { class:'domain-tag observed' }, 'Observed'));
+    rowObs.appendChild(el('p', {}, d.observed));
+    card.appendChild(rowObs);
+
+    const rowTraj = el('div', { class:'domain-row' });
+    rowTraj.appendChild(el('span', { class:'domain-tag trajectory' }, 'Trajectory'));
+    rowTraj.appendChild(el('p', {}, d.trajectory));
+    card.appendChild(rowTraj);
+
+    const rowSpec = el('div', { class:'domain-row' });
+    rowSpec.appendChild(el('span', { class:'domain-tag speculative' }, 'Speculative'));
+    rowSpec.appendChild(el('p', {}, d.speculative));
+    card.appendChild(rowSpec);
+
+    domainGrid.appendChild(card);
+  });
+  domainSection.appendChild(domainGrid);
+  outlookViewEl.appendChild(domainSection);
+
+  const goalsSection = el('div', { class:'outlook-section' });
+  goalsSection.appendChild(el('h3', {}, 'Consciousness Development Goals'));
+  goalsSection.appendChild(el('p', { class:'section-sub' }, 'Not a checklist or a curriculum. These are directions worth moving in regardless of which specific practices or technologies get there.'));
+
+  const goalsGrid = el('div', { class:'goals-grid' });
+  outlook.goals.forEach(g => {
+    const card = el('div', { class:'goal-card' });
+    card.appendChild(el('h5', {}, g.name));
+    card.appendChild(el('p', {}, g.desc));
+    goalsGrid.appendChild(card);
+  });
+  goalsSection.appendChild(goalsGrid);
+  outlookViewEl.appendChild(goalsSection);
+
+  const scenarioSection = el('div', { class:'outlook-section' });
+  scenarioSection.appendChild(el('h3', {}, 'Future Scenarios'));
+  scenarioSection.appendChild(el('p', { class:'section-sub' }, 'Four ways the next 10-25 years could go. Not predictions — a spread of possibilities worth holding at once.'));
+
+  const scenarioGrid = el('div', { class:'scenario-grid' });
+  outlook.scenarios.forEach(s => {
+    const card = el('div', { class:`scenario-card ${s.type}` });
+    card.appendChild(el('div', { class:'scenario-tag' }, s.tag));
+    card.appendChild(el('h4', {}, s.title));
+    card.appendChild(el('p', {}, s.desc));
+    scenarioGrid.appendChild(card);
+  });
+  scenarioSection.appendChild(scenarioGrid);
+  outlookViewEl.appendChild(scenarioSection);
+
+  outlookViewEl.appendChild(el('p', { class:'speculation-note' }, outlook.note));
+}
+
+// ---------- Suggest a Trend ----------
+const GITHUB_REPO = 'patriciagrancho/transcendence-radar';
+
+const suggestBtn = document.getElementById('suggestBtn');
+const modalOverlay = document.getElementById('modalOverlay');
+const sgTitle = document.getElementById('sgTitle');
+const sgDesc = document.getElementById('sgDesc');
+const sgLens = document.getElementById('sgLens');
+const sgCategory = document.getElementById('sgCategory');
+const sgRing = document.getElementById('sgRing');
+const sgConfidence = document.getElementById('sgConfidence');
+const sgConfidenceOut = document.getElementById('sgConfidenceOut');
+const sgImpact = document.getElementById('sgImpact');
+const sgImpactOut = document.getElementById('sgImpactOut');
+const sgEvidence = document.getElementById('sgEvidence');
+const sgCancel = document.getElementById('sgCancel');
+const sgSubmit = document.getElementById('sgSubmit');
+
+function populateCategorySelect(lensKey){
+  sgCategory.innerHTML = '';
+  datasets[lensKey].categories.forEach(c => {
+    sgCategory.appendChild(el('option', { value: c.id }, c.name));
+  });
+}
+
+function populateRingSelect(){
+  sgRing.innerHTML = '';
+  rings.forEach(r => {
+    sgRing.appendChild(el('option', { value: r.id }, `${r.name} (${r.range})`));
+  });
+}
+
+function resetSuggestForm(){
+  sgTitle.value = '';
+  sgDesc.value = '';
+  sgEvidence.value = '';
+  sgLens.value = (currentKey === 'outlook') ? 'transcendence' : currentKey;
+  populateCategorySelect(sgLens.value);
+  populateRingSelect();
+  sgConfidence.value = 50;
+  sgConfidenceOut.textContent = '50%';
+  sgImpact.value = 3;
+  sgImpactOut.textContent = '3 / 5';
+}
+
+function openSuggestModal(){
+  resetSuggestForm();
+  modalOverlay.classList.remove('hidden');
+}
+
+function closeSuggestModal(){
+  modalOverlay.classList.add('hidden');
+}
+
+suggestBtn.addEventListener('click', openSuggestModal);
+sgCancel.addEventListener('click', closeSuggestModal);
+modalOverlay.addEventListener('click', (e) => {
+  if(e.target === modalOverlay) closeSuggestModal();
+});
+
+sgLens.addEventListener('change', () => populateCategorySelect(sgLens.value));
+
+sgConfidence.addEventListener('input', () => {
+  sgConfidenceOut.textContent = `${sgConfidence.value}%`;
+});
+
+sgImpact.addEventListener('input', () => {
+  sgImpactOut.textContent = `${sgImpact.value} / 5`;
+});
+
+sgSubmit.addEventListener('click', () => {
+  const title = sgTitle.value.trim();
+  if(!title){
+    sgTitle.focus();
+    return;
+  }
+
+  const lensLabel = datasets[sgLens.value].label;
+  const catName = sgCategory.options[sgCategory.selectedIndex]
+    ? sgCategory.options[sgCategory.selectedIndex].text
+    : '';
+  const ringName = sgRing.options[sgRing.selectedIndex]
+    ? sgRing.options[sgRing.selectedIndex].text
+    : '';
+
+  const lines = [
+    '**Suggested by:** community submission via Suggest a Trend form',
+    '',
+    `**Lens:** ${lensLabel}`,
+    `**Category:** ${catName}`,
+    `**Time horizon:** ${ringName}`,
+    `**Confidence:** ${sgConfidence.value}%`,
+    `**Impact:** ${sgImpact.value} / 5`,
+    '',
+    '**Description**',
+    sgDesc.value.trim() || '_(none provided)_',
+  ];
+
+  const evidence = sgEvidence.value.trim();
+  if(evidence){
+    lines.push('', '**Evidence / examples**');
+    evidence.split('\n').map(l => l.trim()).filter(Boolean).forEach(l => lines.push(`- ${l}`));
+  }
+
+  lines.push('', '---', '_Review this suggestion, then add it to `datasets` in `index.html` (or dismiss this issue) to act on it._');
+
+  const body = lines.join('\n');
+  const url = `https://github.com/${GITHUB_REPO}/issues/new`
+    + `?title=${encodeURIComponent(`Suggested trend: ${title}`)}`
+    + `&body=${encodeURIComponent(body)}`
+    + `&labels=${encodeURIComponent('suggestion')}`;
+
+  window.open(url, '_blank');
+  closeSuggestModal();
+});
 
 // ---------- Impact slider ----------
 impactSlider.addEventListener('input', () => {
