@@ -232,11 +232,11 @@
     font-weight:700;
   }
   .category-label{
+    fill:var(--ink-soft);
     font-family: var(--font-text);
-    font-size:13px;
-    font-weight:700;
-    letter-spacing:1.2px;
-    text-transform:uppercase;
+    font-size:12px;
+    font-weight:600;
+    letter-spacing:0.2px;
   }
   .blip{
     cursor:pointer;
@@ -543,7 +543,7 @@
 
     <div class="radar-wrap">
       <div class="radar-square">
-        <svg viewBox="-300 -300 1600 1600" id="radarSvg"></svg>
+        <svg viewBox="-100 -100 1200 1200" id="radarSvg"></svg>
       </div>
       <div class="zoom-controls">
         <button id="zoomInBtn" title="Zoom in">+</button>
@@ -832,35 +832,6 @@ const datasets = {
         source:null, sourceLabel:null },
       { name:"Default Mode Network Mapping", cat:5, ring:3, impact:3, confidence:30,
         desc:"Neuroscientists are mapping how the brain's 'default mode network' — linked to self-referential thought — quiets during deep meditation and psychedelic states.",
-        source:null, sourceLabel:null },
-
-      { name:"Vibrational Frequency Wellness", cat:1, ring:0, impact:2, confidence:55,
-        desc:"Products and practices framed around 'energy, frequency, and vibration' — sound baths, frequency-tuned audio, biofield devices — keep expanding within the consumer wellness market.",
-        source:null, sourceLabel:null },
-      { name:"Sacred Geometry Aesthetics", cat:1, ring:1, impact:2, confidence:45,
-        desc:"Sacred geometry motifs like the flower of life, golden-ratio grids, and mandalas are showing up across wellness branding, app interfaces, and architecture as part of a broader 'conscious design' aesthetic.",
-        source:null, sourceLabel:null },
-
-      { name:"Soul-Led Microschools", cat:2, ring:1, impact:2, confidence:40,
-        desc:"Small, purpose-driven education models built around self-awareness and 'inner compass' development are growing within the homeschool and microschool market, often run by independent practitioners outside accredited systems.",
-        source:null, sourceLabel:null },
-
-      { name:"Encrypted Spiritual Networks", cat:0, ring:1, impact:3, confidence:50,
-        desc:"Communities focused on free energy, consciousness, and alternative education are migrating to encrypted messaging platforms outside mainstream social media, building parallel information ecosystems with their own norms.",
-        source:null, sourceLabel:null },
-
-      { name:"Continuity-of-Government Discourse", cat:4, ring:2, impact:2, confidence:25,
-        desc:"Online discussion of continuity-of-government plans and emergency-powers frameworks spikes after major disruptions, often framed as evidence of pre-planned control structures rather than standard disaster-preparedness policy.",
-        source:null, sourceLabel:null },
-      { name:"Project Blue Beam Narrative", cat:4, ring:3, impact:2, confidence:15,
-        desc:"A decades-old theory describing a staged global event using holographic and broadcast technology to manufacture a unifying crisis remains a recurring reference point across alternative media.",
-        source:null, sourceLabel:null },
-
-      { name:"Zero-Point Energy Research", cat:5, ring:2, impact:2, confidence:25,
-        desc:"Independent researchers and online communities continue revisiting zero-point and vacuum-energy concepts, pointing to historical suppressed-inventor narratives alongside genuine open questions in quantum field theory.",
-        source:null, sourceLabel:null },
-      { name:"Crop Circle Research", cat:5, ring:3, impact:1, confidence:15,
-        desc:"Small enthusiast and research groups continue documenting and analyzing crop formations each summer, an enduring niche interest despite mainstream explanations as human-made art.",
         source:null, sourceLabel:null }
     ]
   },
@@ -1077,48 +1048,26 @@ const impactVal = document.getElementById('impactVal');
 
 function computePositions(ds){
   const sectorSize = 360 / ds.categories.length;
-  const outerR = ringBounds[ringBounds.length - 1];
-  ds.items.forEach((item, idx) => { item.id = idx; });
+  ds.items.forEach((item, idx) => {
+    item.id = idx;
+    const sameCategory = ds.items.filter(i => i.cat === item.cat);
+    const posInCat = sameCategory.indexOf(item);
+    const n = sameCategory.length;
+    const sectorStart = item.cat * sectorSize;
+    const margin = sectorSize * 0.12;
+    const usable = sectorSize - margin * 2;
+    const angle = sectorStart + margin + (usable / (n - 1 || 1)) * posInCat;
 
-  ds.categories.forEach((cat, ci) => {
-    const sectorStart = ci * sectorSize;
-    const sectorMid = sectorStart + sectorSize / 2;
-    const itemsInCat = ds.items.filter(i => i.cat === ci);
+    const rIn = ringBounds[item.ring];
+    const rOut = ringBounds[item.ring + 1];
+    const jitter = ((item.id * 37) % 100) / 100;
+    const r = rIn + (rOut - rIn) * (0.25 + jitter * 0.5);
 
-    // Group items into clusters by time-horizon ring so same-ring items
-    // sit together as a tight arc, like the reference radar.
-    const byRing = {};
-    itemsInCat.forEach(item => {
-      (byRing[item.ring] = byRing[item.ring] || []).push(item);
-    });
-
-    Object.keys(byRing).forEach(ringKey => {
-      const ring = +ringKey;
-      const group = byRing[ring];
-      const n = group.length;
-      const rIn = ringBounds[ring];
-      const rOut = ringBounds[ring + 1];
-      const rMid = (rIn + rOut) / 2;
-
-      // Keep the cluster within the sector, tightly packed.
-      const maxSpan = sectorSize * 0.84;
-      const step = n > 1 ? Math.min(3.4, maxSpan / (n - 1)) : 0;
-      const totalSpan = step * (n - 1);
-      const startAngle = sectorMid - totalSpan / 2;
-
-      group.forEach((item, gi) => {
-        const angle = startAngle + step * gi;
-        const jitter = ((item.id * 53) % 100) / 100;
-        const r = rMid + (jitter - 0.5) * (rOut - rIn) * 0.55;
-
-        const [x, y] = polar(CX, CY, r, angle);
-        item.x = x;
-        item.y = y;
-        item.angle = angle;
-        // Labels read radially outward from just past the outer ring.
-        item.labelR = outerR + 22 + (gi % 3) * 15;
-      });
-    });
+    const [x, y] = polar(CX, CY, r, angle);
+    item.x = x;
+    item.y = y;
+    item.angle = angle;
+    item.labelR = 400 + (posInCat % 4) * 14;
   });
 }
 
@@ -1143,23 +1092,16 @@ function renderRadar(ds){
   });
 
   ds.categories.forEach((c, i) => {
-    const angle = i * sectorSize + sectorSize / 2;
-    const labelR = ringBounds[ringBounds.length - 1] + 320;
-    const [x, y] = polar(CX, CY, labelR, angle);
-    const dirX = Math.cos((angle - 90) * Math.PI / 180);
-    let rot = angle - 90;
-    let anchor = 'start';
-    if(dirX < 0){ rot += 180; anchor = 'end'; }
-    const text = el('text', {
-      class:'category-label', x:x, y:y,
-      'text-anchor':anchor, 'dominant-baseline':'central',
-      transform:`rotate(${rot} ${x} ${y})`,
-      fill: palette[i % palette.length]
-    }, c.name);
+    const angle = i * sectorSize + sectorSize/2;
+    const [x, y] = polar(CX, CY, 475, angle);
+    const lines = c.name.split(' & ');
+    const text = el('text', { class:'category-label', x:x, y:y, 'text-anchor':'middle' });
+    lines.forEach((line, li) => {
+      const tspan = el('tspan', { x:x, dy: li === 0 ? 0 : 14 }, li >= 1 && lines.length > 1 ? (li === 1 ? '& ' + line : line) : line);
+      text.appendChild(tspan);
+    });
     svg.appendChild(text);
   });
-
-  const outerR = ringBounds[ringBounds.length - 1];
 
   ds.items.forEach(item => {
     const color = palette[item.cat % palette.length];
@@ -1173,25 +1115,20 @@ function renderRadar(ds){
     g.appendChild(circle);
     g.appendChild(label);
 
-    // Leader line runs from the blip out to just past the outer ring,
-    // along the same radial spoke as the label.
-    const [ex, ey] = polar(CX, CY, outerR + 6, item.angle);
+    const [lx, ly] = polar(CX, CY, item.labelR, item.angle);
     const leader = el('line', {
-      class:'leader-line', x1:item.x, y1:item.y, x2:ex, y2:ey, 'data-id': item.id
+      class:'leader-line', x1:item.x, y1:item.y, x2:lx, y2:ly, 'data-id': item.id
     });
     svg.appendChild(leader);
 
-    // Label is rotated to read radially, inside-out, along its spoke.
-    const [lx, ly] = polar(CX, CY, item.labelR, item.angle);
-    const dirX = Math.cos((item.angle - 90) * Math.PI / 180);
-    let rot = item.angle - 90;
-    let anchor = 'start';
-    if(dirX < 0){ rot += 180; anchor = 'end'; }
+    let anchor = 'middle';
+    let tx = lx;
+    if(lx < CX - 5){ anchor = 'end'; tx = lx - 6; }
+    else if(lx > CX + 5){ anchor = 'start'; tx = lx + 6; }
 
     const nameLabel = el('text', {
-      class:'item-label', x:lx, y:ly, 'data-id': item.id,
-      'text-anchor':anchor, 'dominant-baseline':'central',
-      transform: `rotate(${rot} ${lx} ${ly})`
+      class:'item-label', x:tx, y:ly, 'data-id': item.id,
+      'text-anchor':anchor, 'dominant-baseline':'central'
     }, item.name);
     g.appendChild(nameLabel);
     svg.appendChild(g);
@@ -1206,8 +1143,8 @@ function renderRadar(ds){
 }
 
 // ---------- Zoom & pan ----------
-const BASE_VIEW = { x:-300, y:-300, w:1600, h:1600 };
-const view = { x:-300, y:-300, w:1600, h:1600 };
+const BASE_VIEW = { x:-100, y:-100, w:1200, h:1200 };
+const view = { x:-100, y:-100, w:1200, h:1200 };
 const MIN_SCALE = 0.2;
 const MAX_SCALE = 4;
 
