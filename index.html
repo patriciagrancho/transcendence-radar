@@ -543,7 +543,7 @@
 
     <div class="radar-wrap">
       <div class="radar-square">
-        <svg viewBox="-220 -220 1440 1440" id="radarSvg"></svg>
+        <svg viewBox="-300 -300 1600 1600" id="radarSvg"></svg>
       </div>
       <div class="zoom-controls">
         <button id="zoomInBtn" title="Zoom in">+</button>
@@ -1144,12 +1144,12 @@ function renderRadar(ds){
 
   ds.categories.forEach((c, i) => {
     const angle = i * sectorSize + sectorSize / 2;
-    const labelR = ringBounds[ringBounds.length - 1] + 200;
+    const labelR = ringBounds[ringBounds.length - 1] + 320;
     const [x, y] = polar(CX, CY, labelR, angle);
     const dirX = Math.cos((angle - 90) * Math.PI / 180);
     let rot = angle - 90;
-    let anchor = 'middle';
-    if(dirX < 0){ rot += 180; }
+    let anchor = 'start';
+    if(dirX < 0){ rot += 180; anchor = 'end'; }
     const text = el('text', {
       class:'category-label', x:x, y:y,
       'text-anchor':anchor, 'dominant-baseline':'central',
@@ -1206,8 +1206,8 @@ function renderRadar(ds){
 }
 
 // ---------- Zoom & pan ----------
-const BASE_VIEW = { x:-220, y:-220, w:1440, h:1440 };
-const view = { x:-220, y:-220, w:1440, h:1440 };
+const BASE_VIEW = { x:-300, y:-300, w:1600, h:1600 };
+const view = { x:-300, y:-300, w:1600, h:1600 };
 const MIN_SCALE = 0.2;
 const MAX_SCALE = 4;
 
